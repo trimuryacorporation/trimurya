@@ -1,18 +1,21 @@
 import ContactMessage from '../models/ContactMessage.js';
 import { createTransporter } from '../services/mailService.js';
+import AppConfig from '../config/index.js';
 
 export async function createContactMessage(req, res, next) {
   try {
     const message = await ContactMessage.create(req.body);
 
-    if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
-      const transporter = createTransporter();
-      const emailBody = `Name: ${message.name}\nEmail: ${message.email}\nPhone: ${message.phone || 'N/A'}\nService: ${message.service || 'General Inquiry'}\n\nMessage:\n${message.message}`;
+    const transporter = createTransporter();
+    if (transporter && AppConfig.smtp.user) {
+      const isQuote = message.type === 'quote';
+      const subject = isQuote ? 'New Quote Request from Website' : 'New Contact Inquiry from Website';
+      const emailBody = `Name: ${message.name}\nEmail: ${message.email}\nPhone: ${message.phone || 'N/A'}\nCompany: ${message.company || 'N/A'}\nService: ${message.service || 'General Inquiry'}\n${isQuote ? `Budget: ${message.budget || 'N/A'}\nTimeline: ${message.timeline || 'N/A'}\n` : ''}Message:\n${message.message}`;
 
       await transporter.sendMail({
-        from: process.env.SMTP_USER,
-        to: process.env.SMTP_USER,
-        subject: 'New Contact Inquiry from Website',
+        from: AppConfig.smtp.user,
+        to: isQuote ? AppConfig.smtp.user : AppConfig.smtp.user,
+        subject,
         text: emailBody
       });
     }

@@ -58,6 +58,11 @@ const ROUTE_METADATA = {
     title: 'Dashboard',
     description: 'Access your Trimurya Corporation dashboard and resources.',
     keywords: 'Trimurya Corporation dashboard'
+  },
+  '/privacy-policy': {
+    title: 'Privacy Policy',
+    description: 'Read Trimurya Corporation\'s privacy policy, terms of service, and cookie policy to understand how we protect and use your data.',
+    keywords: 'privacy policy, terms of service, cookie policy, Trimurya Corporation data protection, GDPR compliance'
   }
 };
 

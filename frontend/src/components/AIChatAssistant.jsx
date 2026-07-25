@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FiMessageCircle, FiX } from 'react-icons/fi';
+import { FiX } from 'react-icons/fi';
 
 export default function AIChatAssistant() {
   const [open, setOpen] = useState(false);
@@ -21,7 +21,7 @@ export default function AIChatAssistant() {
         </div>
       )}
       <button onClick={() => setOpen((value) => !value)} className="focus-ring grid h-14 w-14 place-items-center rounded-2xl bg-secondary text-white shadow-lg shadow-secondary/30" aria-label="Open AI chat assistant">
-        <FiMessageCircle size={24} />
+        AI
       </button>
     </div>
   );

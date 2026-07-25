@@ -1,12 +1,15 @@
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+import AppConfig from './config/index.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: join(__dirname, '..', '.env') });
+
 import app from './app.js';
 import connectDB from './config/db.js';
 import mongoose from 'mongoose';
 import User from './models/User.js';
-
-dotenv.config();
-
-const START_PORT = process.env.PORT || 5000;
 
 async function ensureAdmin() {
   if (mongoose.connection.readyState !== 1) {
@@ -14,15 +17,11 @@ async function ensureAdmin() {
     return;
   }
 
-  const adminEmail = process.env.ADMIN_EMAIL || 'admin@trimurya.com';
-  const adminPassword = process.env.ADMIN_PASSWORD || 'Admin@123';
-  const adminName = process.env.ADMIN_NAME || 'System Admin';
-
   try {
-    const existing = await User.findOne({ email: adminEmail });
+    const existing = await User.findOne({ email: AppConfig.admin.email });
     if (!existing) {
-      await User.create({ name: adminName, email: adminEmail, password: adminPassword, role: 'admin', verified: true });
-      console.log('Admin user seeded successfully (email:', adminEmail, ')');
+      await User.create({ name: AppConfig.admin.name, email: AppConfig.admin.email, password: AppConfig.admin.password, role: 'admin', verified: true });
+      console.log('Admin user seeded successfully (email:', AppConfig.admin.email, ')');
     }
   } catch (error) {
     console.log('Admin seeding skipped:', error.message);
@@ -49,22 +48,23 @@ async function tryStart() {
   await connectDB();
   await ensureAdmin();
 
-  let tried = START_PORT;
+  let port = AppConfig.server.port;
   let server;
   let lastErr;
+  const maxRetries = AppConfig.server.maxPortRetries;
 
-  while (tried <= START_PORT + 10) {
+  while (port < AppConfig.server.port + maxRetries) {
     try {
-      server = await startServer(tried);
+      server = await startServer(port);
       return;
     } catch (err) {
       lastErr = err;
-      if (!String(err.message).includes(`EADDRINUSE:${tried}`)) {
+      if (!String(err.message).includes(`EADDRINUSE:${port}`)) {
         console.log('Failed to start server:', err.message);
         process.exit(1);
       }
-      console.log(`Port ${tried} busy, trying next...`);
-      tried++;
+      console.log(`Port ${port} busy, trying next...`);
+      port++;
     }
   }
 

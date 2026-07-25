@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   FiSearch, FiPlus, FiEdit2, FiTrash2, FiX, FiSave, FiArrowLeft, FiEye, FiEyeOff,
-  FiBriefcase, FiFileText, FiLayers, FiGrid, FiPlay
+  FiBriefcase, FiFileText, FiLayers, FiGrid, FiPlay, FiUsers
 } from 'react-icons/fi';
 import api from '../../services/api.js';
 
@@ -29,6 +29,24 @@ const TYPE_CONFIG = {
       { key: 'metrics', label: 'Metrics (JSON)', type: 'json' },
       { key: 'testimonial', label: 'Testimonial (JSON)', type: 'json' },
       { key: 'related', label: 'Related Slugs (comma separated)', type: 'textarea' },
+    ]
+  },
+  case_studies: {
+    label: 'Case Studies',
+    icon: FiBriefcase,
+    fields: [
+      { key: 'title', label: 'Title', type: 'text' },
+      { key: 'slug', label: 'Slug', type: 'text' },
+      { key: 'client', label: 'Client', type: 'text' },
+      { key: 'industry', label: 'Industry', type: 'text' },
+      { key: 'image', label: 'Image URL / Path', type: 'text' },
+      { key: 'summary', label: 'Summary', type: 'textarea' },
+      { key: 'challenge', label: 'Challenge', type: 'textarea' },
+      { key: 'solution', label: 'Solution', type: 'textarea' },
+      { key: 'results', label: 'Results (JSON)', type: 'json' },
+      { key: 'tech', label: 'Tech Stack (comma separated)', type: 'textarea' },
+      { key: 'featured', label: 'Featured', type: 'select', options: ['true', 'false'] },
+      { key: 'status', label: 'Status', type: 'select', options: ['published', 'draft', 'archived'] },
     ]
   },
   services: {
@@ -116,6 +134,87 @@ const TYPE_CONFIG = {
       { key: 'slug', label: 'Slug', type: 'text' },
       { key: 'icon', label: 'Icon', type: 'text' },
       { key: 'copy', label: 'Copy', type: 'textarea' },
+      { key: 'status', label: 'Status', type: 'select', options: ['published', 'draft', 'archived'] },
+    ]
+  },
+  jobs: {
+    label: 'Jobs',
+    icon: FiBriefcase,
+    fields: [
+      { key: 'title', label: 'Job Title', type: 'text' },
+      { key: 'slug', label: 'Slug', type: 'text' },
+      { key: 'department', label: 'Department', type: 'select', options: ['Engineering', 'Design', 'Product', 'Marketing', 'Delivery', 'Leadership'] },
+      { key: 'jobType', label: 'Employment Type', type: 'select', options: ['Full-time', 'Part-time', 'Contract', 'Internship'] },
+      { key: 'location', label: 'Location', type: 'select', options: ['Remote', 'Hybrid', 'On-site', 'India', 'USA', 'UK', 'Singapore'] },
+      { key: 'summary', label: 'Summary', type: 'textarea' },
+      { key: 'description', label: 'Description', type: 'textarea' },
+      { key: 'status', label: 'Status', type: 'select', options: ['published', 'draft', 'archived'] },
+    ]
+  },
+  'hero-slides': {
+    label: 'Hero Slides',
+    icon: FiGrid,
+    fields: [
+      { key: 'title', label: 'Title', type: 'text' },
+      { key: 'slug', label: 'Slug', type: 'text' },
+      { key: 'eyebrow', label: 'Eyebrow', type: 'text' },
+      { key: 'heading', label: 'Heading', type: 'text' },
+      { key: 'description', label: 'Description', type: 'textarea' },
+      { key: 'primary', label: 'Primary Button Text', type: 'text' },
+      { key: 'secondary', label: 'Secondary Button Text', type: 'text' },
+      { key: 'metrics', label: 'Metrics (JSON array)', type: 'json' },
+      { key: 'accent', label: 'Accent Gradient', type: 'text' },
+      { key: 'image', label: 'Background Image URL', type: 'text' },
+      { key: 'status', label: 'Status', type: 'select', options: ['published', 'draft', 'archived'] },
+    ]
+  },
+  testimonials: {
+    label: 'Testimonials',
+    icon: FiFileText,
+    fields: [
+      { key: 'quote', label: 'Quote', type: 'textarea' },
+      { key: 'author', label: 'Author', type: 'text' },
+      { key: 'role', label: 'Role', type: 'text' },
+      { key: 'company', label: 'Company', type: 'text' },
+      { key: 'status', label: 'Status', type: 'select', options: ['published', 'draft', 'archived'] },
+    ]
+  },
+  team: {
+    label: 'Team',
+    icon: FiUsers,
+    fields: [
+      { key: 'name', label: 'Name', type: 'text' },
+      { key: 'role', label: 'Role', type: 'text' },
+      { key: 'department', label: 'Department', type: 'text' },
+      { key: 'image', label: 'Image URL', type: 'text' },
+      { key: 'linkedin', label: 'LinkedIn URL', type: 'text' },
+      { key: 'twitter', label: 'Twitter URL', type: 'text' },
+      { key: 'bio', label: 'Bio', type: 'textarea' },
+      { key: 'status', label: 'Status', type: 'select', options: ['published', 'draft', 'archived'] },
+    ]
+  },
+  clients: {
+    label: 'Clients',
+    icon: FiBriefcase,
+    fields: [
+      { key: 'name', label: 'Client Name', type: 'text' },
+      { key: 'logo', label: 'Logo URL', type: 'text' },
+      { key: 'industry', label: 'Industry', type: 'text' },
+      { key: 'website', label: 'Website URL', type: 'text' },
+      { key: 'status', label: 'Status', type: 'select', options: ['published', 'draft', 'archived'] },
+    ]
+  },
+  'press-releases': {
+    label: 'Press Releases',
+    icon: FiFileText,
+    fields: [
+      { key: 'title', label: 'Title', type: 'text' },
+      { key: 'slug', label: 'Slug', type: 'text' },
+      { key: 'date', label: 'Date', type: 'text' },
+      { key: 'category', label: 'Category', type: 'text' },
+      { key: 'excerpt', label: 'Excerpt', type: 'textarea' },
+      { key: 'content', label: 'Content', type: 'textarea' },
+      { key: 'featured', label: 'Featured', type: 'select', options: ['true', 'false'] },
       { key: 'status', label: 'Status', type: 'select', options: ['published', 'draft', 'archived'] },
     ]
   }
@@ -243,6 +342,12 @@ export default function AdminContentManager() {
       summary: item.summary || '',
       status: item.status || 'published',
     };
+    if (type === 'jobs') {
+      base.department = item.department || '';
+      base.jobType = item.jobType || '';
+      base.location = item.location || '';
+      base.description = item.description || '';
+    }
     setForm(base);
     setError('');
     setModalOpen(true);

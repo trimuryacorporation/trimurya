@@ -1,4 +1,4 @@
-﻿import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   FiArrowUp,
@@ -14,6 +14,7 @@ import {
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaXTwitter, FaYoutube, FaWhatsapp, FaGithub } from 'react-icons/fa6';
 import TextLogo from './TextLogo.jsx';
 import Button from './Button.jsx';
+import { useSettings } from '../context/SettingsContext.jsx';
 
 const footerColumns = [
   {
@@ -24,6 +25,7 @@ const footerColumns = [
       { label: 'Digital Marketing', href: '/services/digital-marketing' },
       { label: 'Business Consultancy', href: '/services/business-consultancy' },
       { label: 'HR & Recruitment', href: '/services/hr-consultancy' },
+      { label: 'Mobile App Development', href: '/services/mobile-app-development' },
       { label: 'Cloud Solutions', href: '/services/cloud-solutions' },
       { label: 'Cybersecurity', href: '/services/cybersecurity' }
     ]
@@ -32,8 +34,9 @@ const footerColumns = [
     title: 'Quick Links',
     links: [
       { label: 'About Us', href: '/about' },
-      { label: 'Careers', href: '/careers' },
-      { label: 'Case Studies', href: '/projects' },
+      { label: 'Our Process', href: '/careers/process' },
+      { label: 'Open Positions', href: '/careers/open-positions' },
+      { label: 'Case Studies', href: '/case_studies' },
       { label: 'Blog & Insights', href: '/blog' },
       { label: 'Industries', href: '/industries' },
       { label: 'Marketplace', href: '/marketplace' }
@@ -42,23 +45,23 @@ const footerColumns = [
   {
     title: 'Company',
     links: [
-      { label: 'Partner With Us', href: '/contact' },
-      { label: 'Request a Quote', href: '/contact' },
-      { label: 'Schedule a Call', href: '/contact' },
-      { label: 'Client Support', href: '/contact' },
-      { label: 'Press & Media', href: '#' }
+      { label: 'Partner With Us', href: '/partner_with_us' },
+      { label: 'Request a Quote', href: '/request_quote' },
+      { label: 'Schedule a Call', href: '/Schedule_Call' },
+      { label: 'Client Support', href: '/Client_Support' },
+      { label: 'Press & Media', href: '/Press_Media' }
     ]
   }
 ];
 
-const socialLinks = [
-  { label: 'LinkedIn', icon: FaLinkedinIn, href: '#' },
-  { label: 'Twitter', icon: FaXTwitter, href: '#' },
-  { label: 'Facebook', icon: FaFacebookF, href: '#' },
-  { label: 'YouTube', icon: FaYoutube, href: '#' },
-  { label: 'Instagram', icon: FaInstagram, href: '#' },
-  { label: 'WhatsApp', icon: FaWhatsapp, href: 'https://wa.me/910000000000' },
-  { label: 'GitHub', icon: FaGithub, href: '#' }
+const defaultSocialLinks = [
+  { label: 'LinkedIn', icon: FaLinkedinIn, href: '#', key: 'linkedin' },
+  { label: 'Twitter', icon: FaXTwitter, href: '#', key: 'twitter' },
+  { label: 'Facebook', icon: FaFacebookF, href: '#', key: 'facebook' },
+  { label: 'YouTube', icon: FaYoutube, href: '#', key: 'youtube' },
+  { label: 'Instagram', icon: FaInstagram, href: '#', key: 'instagram' },
+  { label: 'WhatsApp', icon: FaWhatsapp, href: 'https://wa.me/910000000000', key: 'whatsapp' },
+  { label: 'GitHub', icon: FaGithub, href: '#', key: 'github' }
 ];
 
 const trustBadges = [
@@ -88,52 +91,52 @@ function FooterLink({ children, to }) {
 }
 
 export default function Footer() {
+  const settings = useSettings();
+  const contactEmail = settings.contactEmail || 'info@trimuryacorporation.in';
+  const contactPhone = settings.contactPhone || '+91 00000 00000';
+  const address = settings.address || 'India';
+  const siteName = settings.siteName || 'Trimurya Corporation';
+  const social = settings.social || {};
+
+  const socialLinks = defaultSocialLinks.map((s) => {
+    const handle = social[s.key];
+    if (s.key === 'whatsapp') return s;
+    if (handle) return { ...s, href: handle.startsWith('http') ? handle : `https://${handle}` };
+    return s;
+  });
+
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   return (
     <footer className="relative overflow-hidden">
-      {/* Top gradient fade from page */}
       <div className="absolute inset-x-0 -top-24 h-24 bg-gradient-to-t from-slate-900 to-transparent" />
-
-      {/* Main Footer */}
       <div className="relative bg-slate-900">
-        {/* Subtle grid background pattern */}
         <div className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage: `linear-gradient(rgba(242,178,24,1) 1px, transparent 1px), linear-gradient(90deg, rgba(242,178,24,1) 1px, transparent 1px)`,
             backgroundSize: '48px 48px'
           }}
         />
-
-        {/* Top accent line */}
         <div className="h-1 w-full bg-gradient-to-r from-transparent via-accent to-transparent" />
-
         <div className="relative mx-auto max-w-7xl px-5 pt-16 pb-10 lg:px-8">
-          {/* Main Grid */}
           <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-12 lg:gap-10">
-            {/* Brand Column */}
             <div className="lg:col-span-4">
               <Link to="/" className="inline-flex shrink-0 items-center w-[180px] sm:w-[220px]">
                 <img
                   src="/assets/trimurya-logo-vector.svg"
-                  alt="Trimurya Corporation"
+                  alt={siteName}
                   className="block h-auto w-full object-contain brightness-0 invert"
                   decoding="async"
                 />
               </Link>
-
               <p className="mt-6 text-[13px] leading-7 text-slate-400">
                 A multi-service enterprise partner unifying <span className="text-slate-300">AI</span>, <span className="text-slate-300">web</span>, <span className="text-slate-300">cloud</span>, <span className="text-slate-300">talent</span>, and <span className="text-slate-300">strategy</span> under one platform. We help businesses move faster, scale smarter, and compete with confidence.
               </p>
-
-              {/* CTA Button */}
               <div className="mt-6">
                 <Button to="/contact" className="bg-secondary text-white shadow-lg shadow-accent/20 hover:bg-accent/90 transition-all duration-300 text-xs font-bold px-6 py-3 rounded-xl">
                   Start Your Project <FiArrowRight size={14} />
                 </Button>
               </div>
-
-              {/* Trust Badges */}
               <div className="mt-8 flex flex-wrap gap-2.5">
                 {trustBadges.map((badge) => {
                   const Icon = badge.icon;
@@ -145,13 +148,12 @@ export default function Footer() {
                   );
                 })}
               </div>
-
-              {/* Social Links */}
               <div className="mt-8">
                 <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-3">Follow Us</p>
                 <div className="flex flex-wrap gap-2">
                   {socialLinks.map((social) => {
                     const Icon = social.icon;
+                    if (social.key !== 'whatsapp' && !social.href?.startsWith('http')) return null;
                     return (
                       <motion.a
                         key={social.label}
@@ -168,8 +170,6 @@ export default function Footer() {
                 </div>
               </div>
             </div>
-
-            {/* Links Columns */}
             <div className="lg:col-span-2">
               <h4 className="text-[11px] font-bold uppercase tracking-[0.22em] text-secondary mb-5">Navigation</h4>
               <div className="grid gap-3">
@@ -178,7 +178,6 @@ export default function Footer() {
                 ))}
               </div>
             </div>
-
             <div className="lg:col-span-2">
               <h4 className="text-[11px] font-bold uppercase tracking-[0.22em] text-slate-400 mb-5">Quick Links</h4>
               <div className="grid gap-3">
@@ -187,7 +186,6 @@ export default function Footer() {
                 ))}
               </div>
             </div>
-
             <div className="lg:col-span-2">
               <h4 className="text-[11px] font-bold uppercase tracking-[0.22em] text-slate-400 mb-5">Company</h4>
               <div className="grid gap-3">
@@ -196,26 +194,24 @@ export default function Footer() {
                 ))}
               </div>
             </div>
-
-            {/* Contact + Newsletter Column */}
             <div className="lg:col-span-2">
               <h4 className="text-[11px] font-bold uppercase tracking-[0.22em] text-slate-400 mb-5">Contact</h4>
               <div className="grid gap-4">
-                <a href="mailto:info@trimuryacorporation.in" className="group flex items-start gap-3 text-[13px] text-slate-400 transition-colors hover:text-secondary">
+                <a href={`mailto:${contactEmail}`} className="group flex items-start gap-3 text-[13px] text-slate-400 transition-colors hover:text-secondary">
                   <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-secondary/10 text-secondary">
                     <FiMail size={13} />
                   </div>
                   <div>
-                    <p className="font-semibold text-slate-300 transition-colors group-hover:text-secondary">info@trimuryacorporation.in</p>
+                    <p className="font-semibold text-slate-300 transition-colors group-hover:text-secondary">{contactEmail}</p>
                     <p className="text-[11px] text-slate-500">Email us anytime</p>
                   </div>
                 </a>
-                <a href="tel:+910000000000" className="group flex items-start gap-3 text-[13px] text-slate-400 transition-colors hover:text-secondary">
+                <a href={`tel:${contactPhone.replace(/\s/g, '')}`} className="group flex items-start gap-3 text-[13px] text-slate-400 transition-colors hover:text-secondary">
                   <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-secondary/10 text-secondary">
                     <FiPhone size={13} />
                   </div>
                   <div>
-                    <p className="font-semibold text-slate-300 transition-colors group-hover:text-secondary">+91 00000 00000</p>
+                    <p className="font-semibold text-slate-300 transition-colors group-hover:text-secondary">{contactPhone}</p>
                     <p className="text-[11px] text-slate-500">Mon-Fri, 9am-6pm IST</p>
                   </div>
                 </a>
@@ -224,18 +220,14 @@ export default function Footer() {
                     <FiMapPin size={13} />
                   </div>
                   <div>
-                    <p className="font-semibold text-slate-300">India</p>
+                    <p className="font-semibold text-slate-300">{address}</p>
                     <p className="text-[11px] text-slate-500">Serving clients globally</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
-          {/* Divider */}
           <div className="my-10 h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-
-          {/* Stats Bar */}
           <div className="grid grid-cols-2 gap-5 rounded-2xl border border-white/8 bg-white/[0.03] p-6 backdrop-blur-sm md:grid-cols-4 lg:gap-8 lg:p-8">
             {footerStats.map((stat, index) => (
               <motion.div
@@ -251,26 +243,21 @@ export default function Footer() {
               </motion.div>
             ))}
           </div>
-
-          {/* Divider */}
           <div className="my-10 h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-
-          {/* Bottom Bar */}
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <div className="flex flex-col items-center gap-2 md:items-start">
               <p className="text-[12px] text-slate-500">
-                © 2026 <span className="font-semibold text-slate-300">Trimurya Corporation</span>. All rights reserved.
+                &copy; {new Date().getFullYear()} <span className="font-semibold text-slate-300">{siteName}</span>. All rights reserved.
               </p>
               <p className="text-[11px] text-slate-600">
                 Create. Preserve. Transform.
               </p>
             </div>
-
             <div className="flex flex-wrap items-center justify-center gap-5">
               {['Privacy Policy', 'Terms of Service', 'Cookie Policy'].map((link) => (
                 <Link
                   key={link}
-                  to="#"
+                  to="/privacy-policy"
                   className="text-[12px] text-slate-500 transition-colors hover:text-secondary"
                 >
                   {link}
@@ -278,20 +265,8 @@ export default function Footer() {
               ))}
             </div>
           </div>
-
-          {/* Enterprise tagline */}
-          <div className="mt-8 flex items-center justify-center gap-3 text-[11px] text-slate-600">
-            <span className="inline-flex h-1.5 w-1.5 rounded-full bg-green-500/80" />
-            All systems operational
-            <span className="text-slate-700"> · </span>
-            Enterprise-grade delivery since 2018
-            <span className="text-slate-700"> · </span>
-            Trusted by 200+ organizations
-          </div>
         </div>
       </div>
-
-      {/* Back to top button */}
       <motion.button
         type="button"
         onClick={scrollToTop}

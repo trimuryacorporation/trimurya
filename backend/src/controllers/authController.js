@@ -1,8 +1,9 @@
+import AppConfig from '../config/index.js';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
 function signToken(user) {
-  return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET || 'dev_secret', { expiresIn: '7d' });
+  return jwt.sign({ id: user._id, role: user.role }, AppConfig.jwt.secret, { expiresIn: AppConfig.jwt.expiresIn });
 }
 
 export async function register(req, res, next) {

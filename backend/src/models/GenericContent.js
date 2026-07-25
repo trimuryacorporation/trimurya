@@ -1,3 +1,4 @@
+import AppConfig from '../config/index.js';
 import mongoose from 'mongoose';
 
 const genericContentSchema = new mongoose.Schema(
@@ -9,7 +10,7 @@ const genericContentSchema = new mongoose.Schema(
     content: String,
     image: String,
     images: [String],
-    status: { type: String, enum: ['draft', 'published', 'archived'], default: 'published' },
+    status: { type: String, enum: AppConfig.content.contentStatuses || ['draft', 'published', 'archived'], default: AppConfig.content.defaultStatus },
     metadata: { type: mongoose.Schema.Types.Mixed, default: {} }
   },
   { timestamps: true, strict: false }

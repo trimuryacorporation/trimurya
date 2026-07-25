@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link, Outlet, useLocation, Navigate } from 'react-router-dom';
-import { FiHome, FiBriefcase, FiFileText, FiUsers, FiLayers, FiGrid, FiBarChart2, FiLogOut, FiMenu, FiX, FiSettings, FiTag, FiShoppingBag, FiPlay } from 'react-icons/fi';
+import { FiHome, FiBriefcase, FiFileText, FiUsers, FiLayers, FiGrid, FiBarChart2, FiLogOut, FiMenu, FiX, FiSettings, FiTag, FiShoppingBag, FiPlay, FiBookmark, FiMail, FiBookOpen, FiMessageCircle, FiAward } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const sidebarVariants = {
@@ -16,10 +16,19 @@ const overlayVariants = {
 const navItems = [
   { label: 'Dashboard', icon: FiHome, path: '/admin/dashboard' },
   { label: 'Projects', icon: FiBriefcase, path: '/admin/content/projects' },
+  { label: 'Case Studies', icon: FiBookOpen, path: '/admin/content/case_studies' },
   { label: 'Services', icon: FiLayers, path: '/admin/content/services' },
   { label: 'Industries', icon: FiGrid, path: '/admin/content/industries' },
   { label: 'Blogs', icon: FiFileText, path: '/admin/content/blogs' },
+  { label: 'Jobs', icon: FiBookmark, path: '/admin/content/jobs' },
+  { label: 'Applications', icon: FiMail, path: '/admin/applications' },
+  { label: 'Testimonials', icon: FiMessageCircle, path: '/admin/content/testimonials' },
+  { label: 'Team', icon: FiUsers, path: '/admin/content/team' },
+  { label: 'Clients', icon: FiShoppingBag, path: '/admin/content/clients' },
+  { label: 'Press Releases', icon: FiFileText, path: '/admin/content/press-releases' },
+  { label: 'Values', icon: FiAward, path: '/admin/content/values' },
   { label: 'Videos', icon: FiPlay, path: '/admin/content/videos' },
+  { label: 'Hero Slides', icon: FiPlay, path: '/admin/content/hero-slides' },
   { label: 'Users', icon: FiUsers, path: '/admin/users' },
   { label: 'Stats', icon: FiBarChart2, path: '/admin/content/stats' },
   { label: 'Settings', icon: FiSettings, path: '/admin/settings' },
@@ -28,6 +37,7 @@ const navItems = [
 export default function AdminLayout() {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  console.log('AdminLayout init, admin from localStorage:', (() => { try { const d = localStorage.getItem('trimurya_admin'); return d ? JSON.parse(d) : null; } catch { return null; } })());
   const [admin, setAdmin] = useState(() => {
     try {
       const adminData = localStorage.getItem('trimurya_admin');
@@ -41,12 +51,16 @@ export default function AdminLayout() {
   useEffect(() => {
     const token = localStorage.getItem('trimurya_token');
     const adminData = localStorage.getItem('trimurya_admin');
+    console.log('AdminLayout useEffect:', { token: !!token, adminData: !!adminData });
     if (token && adminData) {
       try {
-        setAdmin(JSON.parse(adminData));
+        const parsed = JSON.parse(adminData);
+        setAdmin(parsed);
       } catch {
         setAdmin(null);
       }
+    } else {
+      setAdmin(null);
     }
 
     const handleResize = () => setIsDesktop(window.innerWidth >= 1024);
@@ -238,3 +252,5 @@ export default function AdminLayout() {
     </div>
   );
 }
+
+

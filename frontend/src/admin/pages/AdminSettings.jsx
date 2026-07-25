@@ -1,14 +1,28 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FiSettings, FiSave, FiGlobe, FiMail, FiShield } from 'react-icons/fi';
+import { FiSettings, FiSave, FiGlobe, FiMail, FiShield, FiRefreshCw } from 'react-icons/fi';
 import api from '../../services/api.js';
+import { fetchSettings, persistSettings } from '../../services/settingsApi.js';
+
+const defaultState = {
+  siteName: 'Trimurya Corporation',
+  siteUrl: 'https://www.trimuryacorporation.in',
+  siteDescription: '',
+  contactEmail: '',
+  contactPhone: '',
+  address: '',
+  linkedin: '',
+  twitter: '',
+  facebook: '',
+  instagram: ''
+};
 
 export default function AdminSettings() {
   const [admin, setAdmin] = useState(null);
-  const [siteName, setSiteName] = useState('Trimurya Corporation');
-  const [siteUrl, setSiteUrl] = useState('https://www.trimuryacorporation.in');
+  const [state, setState] = useState({ ...defaultState, social: {} });
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const adminData = localStorage.getItem('trimurya_admin');
@@ -19,38 +33,83 @@ export default function AdminSettings() {
     }
   }, []);
 
+  useEffect(() => {
+    let mounted = true;
+    setLoading(true);
+    fetchSettings('site').then((data) => {
+      if (!mounted) return;
+      setState((s) => ({
+        ...defaultState,
+        ...data,
+        social: {
+          linkedin: data.linkedin || '',
+          twitter: data.twitter || '',
+          facebook: data.facebook || '',
+          instagram: data.instagram || ''
+        }
+      }));
+      setLoading(false);
+    }).catch(() => {
+      if (mounted) setLoading(false);
+    });
+    return () => { mounted = false; };
+  }, []);
+
+  const handleChange = (field) => (e) => {
+    setState((s) => ({ ...s, [field]: e.target.value }));
+  };
+
+  const handleSocialChange = (platform) => (e) => {
+    setState((s) => ({ ...s, social: { ...s.social, [platform]: e.target.value } }));
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
     setSaving(true);
     setSaved(false);
-    await new Promise((r) => setTimeout(r, 800));
-    setSaving(false);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+    try {
+      await persistSettings(state);
+      setSaved(true);
+    } catch (err) {
+      console.error('Failed to save settings:', err);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
-    <div className="mx-auto max-w-4xl space-y-6">
-      <h2 className="text-2xl font-black text-primary dark:text-white">Settings</h2>
-
+    <div className="space-y-6">
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-6">
           <form onSubmit={handleSave} className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <h3 className="mb-4 flex items-center gap-2 text-lg font-black text-primary dark:text-white">
-              <FiGlobe size={20} className="text-secondary" /> Site Configuration
-            </h3>
-            <div className="space-y-4">
-              <div>
-                <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Site Name</label>
-                <input type="text" value={siteName} onChange={(e) => setSiteName(e.target.value)} className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 px-3 text-sm font-medium text-primary focus:border-secondary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white" />
-              </div>
-              <div>
-                <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Site URL</label>
-                <input type="url" value={siteUrl} onChange={(e) => setSiteUrl(e.target.value)} className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 px-3 text-sm font-medium text-primary focus:border-secondary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white" />
-              </div>
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="flex items-center gap-2 text-lg font-black text-primary dark:text-white">
+                <FiGlobe size={20} className="text-secondary" /> Site Configuration
+              </h3>
+              <button type="button" onClick={() => window.location.reload()} className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 dark:hover:bg-slate-800" title="Refresh">
+                <FiRefreshCw size={16} />
+              </button>
             </div>
+            {loading ? (
+              <div className="py-8 text-center text-sm text-slate-500">Loading settings...</div>
+            ) : (
+              <div className="space-y-4">
+                <div>
+                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Site Name</label>
+                  <input type="text" value={state.siteName} onChange={handleChange('siteName')} className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 px-3 text-sm font-medium text-primary focus:border-secondary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white" />
+                </div>
+                <div>
+                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Site URL</label>
+                  <input type="url" value={state.siteUrl} onChange={handleChange('siteUrl')} className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 px-3 text-sm font-medium text-primary focus:border-secondary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white" />
+                </div>
+                <div>
+                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Site Description</label>
+                  <textarea value={state.siteDescription} onChange={handleChange('siteDescription')} rows={3} className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 px-3 text-sm font-medium text-primary focus:border-secondary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white" />
+                </div>
+              </div>
+            )}
             <div className="mt-6 flex items-center justify-end">
-              <button type="submit" disabled={saving} className="focus-ring inline-flex items-center gap-2 rounded-xl bg-secondary px-5 py-2.5 text-sm font-bold text-white transition hover:bg-secondary/80 disabled:opacity-60">
+              <button type="submit" disabled={saving || loading} className="focus-ring inline-flex items-center gap-2 rounded-xl bg-secondary px-5 py-2.5 text-sm font-bold text-white transition hover:bg-secondary/80 disabled:opacity-60">
                 {saving ? 'Saving...' : <><FiSave size={16} /> Save Settings</>}
               </button>
             </div>
@@ -59,8 +118,60 @@ export default function AdminSettings() {
 
           <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <h3 className="mb-4 flex items-center gap-2 text-lg font-black text-primary dark:text-white">
-              <FiMail size={20} className="text-secondary" /> API Configuration
+              <FiMail size={20} className="text-secondary" /> Contact Information
             </h3>
+            {loading ? (
+              <div className="py-4 text-center text-sm text-slate-500">Loading...</div>
+            ) : (
+              <div className="space-y-4">
+                <div>
+                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Contact Email</label>
+                  <input type="email" value={state.contactEmail} onChange={handleChange('contactEmail')} className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 px-3 text-sm font-medium text-primary focus:border-secondary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white" />
+                </div>
+                <div>
+                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Contact Phone</label>
+                  <input type="tel" value={state.contactPhone} onChange={handleChange('contactPhone')} className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 px-3 text-sm font-medium text-primary focus:border-secondary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white" />
+                </div>
+                <div>
+                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Address</label>
+                  <input type="text" value={state.address} onChange={handleChange('address')} className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 px-3 text-sm font-medium text-primary focus:border-secondary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white" />
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <h3 className="mb-4 flex items-center gap-2 text-lg font-black text-primary dark:text-white">
+              <FiShield size={20} className="text-secondary" /> Social Links
+            </h3>
+            {loading ? (
+              <div className="py-4 text-center text-sm text-slate-500">Loading...</div>
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">LinkedIn</label>
+                  <input type="text" value={state.social?.linkedin || ''} onChange={handleSocialChange('linkedin')} placeholder="https://linkedin.com/in/..." className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 px-3 text-sm font-medium text-primary focus:border-secondary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white" />
+                </div>
+                <div>
+                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Twitter / X</label>
+                  <input type="text" value={state.social?.twitter || ''} onChange={handleSocialChange('twitter')} placeholder="https://x.com/..." className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 px-3 text-sm font-medium text-primary focus:border-secondary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white" />
+                </div>
+                <div>
+                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Facebook</label>
+                  <input type="text" value={state.social?.facebook || ''} onChange={handleSocialChange('facebook')} placeholder="https://facebook.com/..." className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 px-3 text-sm font-medium text-primary focus:border-secondary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white" />
+                </div>
+                <div>
+                  <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Instagram</label>
+                  <input type="text" value={state.social?.instagram || ''} onChange={handleSocialChange('instagram')} placeholder="https://instagram.com/..." className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 px-3 text-sm font-medium text-primary focus:border-secondary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white" />
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <h3 className="mb-4 text-lg font-black text-primary dark:text-white">API Configuration</h3>
             <div className="space-y-3">
               <div className="flex items-center justify-between rounded-xl bg-slate-50 p-4 dark:bg-slate-800">
                 <div><p className="text-sm font-medium text-primary dark:text-white">API Endpoint</p><p className="text-xs text-slate-500 dark:text-slate-400">/api</p></div>
@@ -72,9 +183,7 @@ export default function AdminSettings() {
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="space-y-6">
           <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <h3 className="mb-4 text-lg font-black text-primary dark:text-white">Admin Profile</h3>
             <div className="flex items-center gap-3">

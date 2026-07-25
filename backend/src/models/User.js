@@ -1,3 +1,4 @@
+import AppConfig from '../config/index.js';
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 
@@ -6,7 +7,7 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true, lowercase: true },
     password: { type: String, required: true, select: false },
-    role: { type: String, enum: ['admin', 'employee', 'client', 'candidate'], default: 'candidate' },
+    role: { type: String, enum: ['admin', 'employee', 'client', 'candidate'], default: AppConfig.content.defaultRole },
     verified: { type: Boolean, default: false }
   },
   { timestamps: true }

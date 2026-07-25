@@ -1,3 +1,4 @@
+import AppConfig from '../config/index.js';
 import mongoose from 'mongoose';
 
 const contactMessageSchema = new mongoose.Schema(
@@ -7,7 +8,11 @@ const contactMessageSchema = new mongoose.Schema(
     phone: String,
     service: String,
     message: { type: String, required: true },
-    status: { type: String, enum: ['new', 'contacted', 'closed'], default: 'new' }
+    type: { type: String, enum: ['contact', 'quote', 'support'], default: 'contact' },
+    budget: String,
+    timeline: String,
+    company: String,
+    status: { type: String, enum: AppConfig.content.contactStatuses || ['new', 'contacted', 'closed'], default: 'new' }
   },
   { timestamps: true }
 );

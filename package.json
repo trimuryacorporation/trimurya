@@ -2,6 +2,7 @@
   "name": "trimurya-corporation-platform",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "Enterprise website and API platform for Trimurya Corporation.",
   "scripts": {
     "install:all": "npm install --prefix frontend && npm install --prefix backend",
@@ -13,3 +14,5 @@
     "concurrently": "^9.2.1"
   }
 }
+
+

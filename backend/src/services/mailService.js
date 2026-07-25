@@ -1,10 +1,14 @@
+import AppConfig from '../config/index.js';
 import nodemailer from 'nodemailer';
 
 export function createTransporter() {
+  if (!AppConfig.smtp.host || !AppConfig.smtp.user || !AppConfig.smtp.pass) {
+    return null;
+  }
   return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT || 587),
-    secure: false,
-    auth: process.env.SMTP_USER ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS } : undefined
+    host: AppConfig.smtp.host,
+    port: AppConfig.smtp.port,
+    secure: AppConfig.smtp.secure,
+    auth: { user: AppConfig.smtp.user, pass: AppConfig.smtp.pass }
   });
 }

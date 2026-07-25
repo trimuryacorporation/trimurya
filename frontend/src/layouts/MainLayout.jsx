@@ -131,8 +131,19 @@ export default function MainLayout() {
 
   useEffect(() => {
     setPageSeo(location.pathname);
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace('#', '');
+      const el = document.getElementById(id);
+      if (el) {
+        setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 0);
+        return;
+      }
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  }, [location.pathname, location.hash]);
 
   const iconMap = {
     'AI Data': 'FiDatabase',

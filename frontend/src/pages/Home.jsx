@@ -55,7 +55,7 @@ export default function Home() {
             {[1,2,3,4].map((n) => <div key={n} className="h-24 rounded-2xl bg-slate-100 dark:bg-slate-800 animate-pulse" />)}
           </div>
         ) : (
-          <div className="mx-auto grid max-w-7xl gap-4 md:grid-cols-4">{stats.map((stat) => <CounterCard key={stat.slug || stat._id} value={stat.value} suffix="" label={stat.label} />)}</div>
+          <div className="mx-auto grid max-w-7xl gap-4 md:grid-cols-4">{stats.map((stat) => <CounterCard key={stat.slug || stat._id} value={stat.value} label={stat.label} />)}</div>
         )}
       </section>
 

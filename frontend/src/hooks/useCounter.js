@@ -6,9 +6,11 @@ export default function useCounter(target, duration = 1200) {
   useEffect(() => {
     let frame;
     const start = performance.now();
+    const numericTarget = typeof target === 'string' ? parseInt(target.replace(/[^0-9]/g, ''), 10) : Number(target);
+    const safeTarget = Number.isFinite(numericTarget) ? numericTarget : 0;
     const tick = (time) => {
       const progress = Math.min((time - start) / duration, 1);
-      setValue(Math.floor(progress * target));
+      setValue(Math.floor(progress * safeTarget));
       if (progress < 1) frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);

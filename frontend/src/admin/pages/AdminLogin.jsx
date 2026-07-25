@@ -6,7 +6,7 @@ import api from '../../services/api.js';
 
 export default function AdminLogin() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email: 'admin@trimurya.com', password: 'Admin@123' });
+  const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -17,15 +17,18 @@ export default function AdminLogin() {
 
     try {
       const { data } = await api.post('/auth/login', { email: form.email, password: form.password });
+      console.log('Login response:', data);
       if (data.success) {
         const role = data.user?.role || 'admin';
         localStorage.setItem('trimurya_token', data.token);
         localStorage.setItem('trimurya_admin', JSON.stringify({ ...data.user, role }));
-        navigate('/admin/dashboard', { replace: true });
+        console.log('Token saved, navigating to dashboard...');
+        window.location.href = '/admin/dashboard';
       } else {
         setError(data.message || 'Invalid credentials');
       }
     } catch (err) {
+      console.error('Login error:', err);
       setError(err.response?.data?.message || 'Something went wrong');
     } finally {
       setLoading(false);
@@ -66,7 +69,7 @@ export default function AdminLogin() {
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   required
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-4 text-sm font-medium text-primary placeholder:text-slate-400 transition focus:border-secondary focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                  placeholder="admin@trimurya.com"
+                  placeholder="admin@trimuryacorporation.in"
                 />
               </div>
             </div>
@@ -94,14 +97,9 @@ export default function AdminLogin() {
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
-
-          <div className="mt-6 rounded-xl bg-slate-50 p-4 text-center dark:bg-slate-800/50">
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Demo: <span className="font-mono font-bold text-secondary">admin@trimurya.com</span> / <span className="font-mono font-bold text-secondary">Admin@123</span>
-            </p>
-          </div>
         </div>
       </motion.div>
     </div>
   );
 }
+

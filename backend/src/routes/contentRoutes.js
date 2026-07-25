@@ -3,19 +3,24 @@ import GenericContent from '../models/GenericContent.js';
 import User from '../models/User.js';
 import { createContent, listContent, getSingleContent, updateContent, deleteContent } from '../controllers/contentController.js';
 import { protect, authorize } from '../middlewares/authMiddleware.js';
+import AppConfig from '../config/index.js';
 
 const router = express.Router();
 
-const resources = [
+const DEFAULT_RESOURCE_TYPES = [
   'services', 'industries', 'projects', 'clients',
   'team', 'blogs', 'jobs', 'applications', 'resumes',
   'testimonials', 'gallery', 'newsletter', 'appointments',
   'meetings', 'tickets', 'notifications', 'seo', 'settings',
   'analytics', 'activity-logs', 'stats', 'values', 'nav-links',
-  'videos'
+  'videos', 'hero-slides', 'case_studies', 'press-releases'
 ];
 
-resources.forEach((resource) => {
+const resourceTypes = Array.isArray(AppConfig.content.resourceTypes) && AppConfig.content.resourceTypes.length > 0
+  ? AppConfig.content.resourceTypes
+  : DEFAULT_RESOURCE_TYPES;
+
+for (const resource of resourceTypes) {
   router.get(`/${resource}`, protect, authorize('admin', 'employee'), async (req, res, next) => {
     try {
       const result = await listContent(resource);
@@ -25,14 +30,15 @@ resources.forEach((resource) => {
     }
   });
 
-  router.get(`/${resource}/public`, async (req, res, next) => {
+  router.get(`/${resource}/public`, async (req, res) => {
     try {
-      const filters = { status: 'published' };
+      const filters = { status: AppConfig.content.defaultStatus };
       if (req.query.slug) filters.slug = req.query.slug;
       const result = await listContent(resource, filters);
       res.json(result);
     } catch (error) {
-      next(error);
+      console.error(`Public fetch failed for ${resource}:`, error.message);
+      res.json({ success: true, data: [] });
     }
   });
 
@@ -71,30 +77,30 @@ resources.forEach((resource) => {
       next(error);
     }
   });
-});
+}
 
 router.get('/dashboard/summary', async (req, res) => {
   try {
-    const [
-      projects,
-      services,
-      blogs,
-      industries,
-      users
-    ] = await Promise.all([
-      GenericContent.countDocuments({ type: 'projects' }),
-      GenericContent.countDocuments({ type: 'services' }),
-      GenericContent.countDocuments({ type: 'blogs' }),
-      GenericContent.countDocuments({ type: 'industries' }),
-      User.countDocuments()
-    ]);
+    const supportedTypes = AppConfig.content.dashboardSummaryTypes || [
+      'projects', 'services', 'blogs', 'industries', 'case_studies',
+      'testimonials', 'team', 'clients', 'press-releases', 'values', 'stats'
+    ];
+    const countPromises = supportedTypes.map(type => GenericContent.countDocuments({ type }));
+    const usersPromise = User.countDocuments();
+    const counts = await Promise.all([...countPromises, usersPromise]);
+
+    const summary = {};
+    supportedTypes.forEach((type, i) => {
+      summary[type] = counts[i];
+    });
+    summary.users = counts[counts.length - 1];
 
     res.json({
       success: true,
-      data: { projects, services, blogs, industries, users }
+      data: summary
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Failed to load dashboard data' });
+    res.json({ success: true, data: { projects: 0, services: 0, blogs: 0, industries: 0, users: 0 } });
   }
 });
 
