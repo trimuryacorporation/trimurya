@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { FiArrowRight, FiCalendar, FiClock, FiMail, FiMapPin, FiPhone, FiVideo } from 'react-icons/fi';
+import { localBusinessSchema, breadcrumbSchema } from '../utils/seo.js';
 
 
 const timeSlots = [
@@ -49,7 +51,19 @@ export default function Contact() {
   };
 
   return (
-    <div className="bg-slate-50 dark:bg-slate-950">
+    <>
+      <Helmet>
+        <title>Contact Us | Trimurya Corporation</title>
+        <meta name="description" content="Contact Trimurya Corporation to discuss AI, technology, recruitment, digital marketing, telecom, and media needs." />
+        <meta name="keywords" content="contact Trimurya Corporation, business enquiry, AI consultation, recruitment enquiry" />
+        <link rel="canonical" href="https://www.trimuryacorporation.in/contact" />
+        <script type="application/ld+json">{JSON.stringify(localBusinessSchema())}</script>
+        <script type="application/ld+json">{JSON.stringify(breadcrumbSchema([
+          { name: 'Home', url: 'https://www.trimuryacorporation.in/' },
+          { name: 'Contact Us', url: 'https://www.trimuryacorporation.in/contact' }
+        ]))}</script>
+      </Helmet>
+      <div className="bg-slate-50 dark:bg-slate-950">
 
 
       <section className="mx-auto max-w-7xl px-4 py-20 lg:px-8">
@@ -187,5 +201,6 @@ export default function Contact() {
         </div>
       </section>
     </div>
+    </>
   );
 }

@@ -53,10 +53,11 @@ export default function AppRoutes() {
         <Route path="services/website-development" element={<WebsiteDevelopment />} />
         <Route path="services/digital-marketing" element={<DigitalMarketing />} />
         <Route path="services/business-consultancy" element={<BusinessConsultancy />} />
-        <Route path="services/hr-consultancy" element={<HrConsultancy />} />
+        <Route path="services/hr-and-recruitment-solutions" element={<HrConsultancy />} />
         <Route path="services/mobile-app-development" element={<MobileAppDevelopment />} />
         <Route path="services/cloud-solutions" element={<CloudSolutions />} />
         <Route path="services/cybersecurity" element={<Cybersecurity />} />
+        <Route path="services/cybersecurity-services" element={<Cybersecurity />} />
         <Route path="industries" element={<Industries />} />
         <Route path="projects" element={<Projects />} />
         <Route path="projects/:slug" element={<ProjectDetail />} />

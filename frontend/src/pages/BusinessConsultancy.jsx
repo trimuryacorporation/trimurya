@@ -14,9 +14,15 @@ import {
   FiShield,
   FiTarget,
   FiStar,
-  FiMail
+  FiMail,
+  FiBriefcase,
+  FiZap,
+  FiGlobe,
+  FiBarChart,
+  FiFileText,
+  FiAward
 } from 'react-icons/fi';
-import { fetchPublishedBySlug } from '../services/contentApi.js';import { resolveIcon } from '../utils/iconResolver.js';
+import { fetchPublished, fetchPublishedBySlug } from '../services/contentApi.js';import { resolveIcon } from '../utils/iconResolver.js';
 import SectionHeader from '../components/SectionHeader.jsx';
 import ServiceCard from '../components/ServiceCard.jsx';
 import Button from '../components/Button.jsx';
@@ -30,6 +36,7 @@ export default function BusinessConsultancy() {
   const slug = 'business-consultancy';
   const [service, setService] = useState(null);
   const [relatedServices, setRelatedServices] = useState([]);
+  const [allServices, setAllServices] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -41,8 +48,13 @@ export default function BusinessConsultancy() {
         Promise.all(data.related.map((rSlug) => fetchPublishedBySlug('services', rSlug)))
           .then((results) => { if (!cancelled) setRelatedServices(results.filter(Boolean)); });
       }
-      setLoading(false);
-    }).catch(() => setLoading(false));
+      return fetchPublished('services');
+    }).then((all) => {
+      if (!cancelled && all) {
+        setAllServices(all.filter((s) => s.slug !== slug));
+      }
+    }).catch(() => setLoading(false))
+    .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
   }, [slug]);
 
@@ -64,7 +76,7 @@ export default function BusinessConsultancy() {
 
   return (
     <div className="min-h-screen">
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-slate-900 py-16 lg:py-24">
+      <section className="relative -mt-12 overflow-hidden bg-gradient-to-br from-primary via-primary to-slate-900 py-16 lg:py-24">
         <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: 'linear-gradient(rgba(242,178,24,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(242,178,24,0.08) 1px, transparent 1px)', backgroundSize: '44px 44px' }} />
         <div className="absolute -right-32 -top-32 h-[500px] w-[500px] rounded-full bg-secondary/5 blur-3xl" />
         <div className="absolute -left-32 -bottom-32 h-[500px] w-[500px] rounded-full bg-accent/5 blur-3xl" />
@@ -108,7 +120,14 @@ export default function BusinessConsultancy() {
         <div className="mx-auto max-w-7xl px-4 lg:px-8">
           <p className="text-xs font-extrabold uppercase tracking-[0.24em] text-secondary">Key Outcomes</p>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {service.outcomes.map((outcome, index) => (
+            {[...new Set([
+              ...service.outcomes,
+              '30% improvement in operational efficiency',
+              '40% reduction in operational costs',
+              '50% faster decision-making process',
+              '90% stakeholder satisfaction'
+      
+            ])].map((outcome, index) => (
               <motion.div key={outcome} initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: index * 0.08 }} className="rounded-2xl border border-slate-200 bg-slate-50 p-6 text-center dark:border-slate-800 dark:bg-slate-900">
                 <FiCheckCircle className="mx-auto text-accent" size={24} />
                 <p className="mt-3 text-sm font-bold leading-6 text-primary dark:text-white">{outcome}</p>
@@ -122,12 +141,32 @@ export default function BusinessConsultancy() {
           <SectionHeader eyebrow="Why Choose Us" title="Benefits that drive impact" copy="We deliver measurable results through structured business consultancy services that de-risks initiatives and accelerates outcomes." />
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {service.benefits.map((benefit, index) => {
-              const BenefitIcon = resolveIcon(benefit.icon);
+              const BenefitIcon = resolveIcon(benefit.icon) || FiTrendingUp;
               return (
-                <motion.div key={benefit.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08 }} className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-950">
-                  <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary/10 text-secondary transition-colors duration-300 group-hover:bg-secondary group-hover:text-white"><BenefitIcon size={24} /></div>
-                  <h3 className="mt-4 text-lg font-black text-primary dark:text-white">{benefit.title}</h3>
-                  <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">{benefit.copy}</p>
+                <motion.div key={benefit.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08 }} className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-slate-800 dark:bg-slate-950">
+                  <div className="absolute inset-0 bg-gradient-to-br from-secondary/0 via-secondary/0 to-secondary/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="relative">
+                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary/10 text-secondary transition-colors duration-300 group-hover:bg-secondary group-hover:text-white"><BenefitIcon size={24} /></div>
+                    <h3 className="mt-4 text-lg font-black text-primary dark:text-white">{benefit.title}</h3>
+                    <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">{benefit.copy}</p>
+                  </div>
+                </motion.div>
+              );
+            })}
+            {[
+              { title: 'Operational Excellence', copy: 'Streamlined processes, waste reduction, and performance optimization to boost efficiency and profitability.', icon: FiZap },
+              { title: 'Data-Driven Decisions', copy: 'Actionable insights from market research, financial modeling, and KPIs to reduce risk and improve outcomes.', icon: FiBarChart },
+              { title: 'Change Management', copy: 'Structured transformation programs that align people, processes, and technology for sustainable change.', icon: FiUsers }
+            ].map((benefit, index) => {
+              const BenefitIcon = benefit.icon;
+              return (
+                <motion.div key={benefit.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: (service.benefits.length + index) * 0.08 }} className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-slate-800 dark:bg-slate-950">
+                  <div className="absolute inset-0 bg-gradient-to-br from-secondary/0 via-secondary/0 to-secondary/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="relative">
+                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary/10 text-secondary transition-colors duration-300 group-hover:bg-secondary group-hover:text-white"><BenefitIcon size={24} /></div>
+                    <h3 className="mt-4 text-lg font-black text-primary dark:text-white">{benefit.title}</h3>
+                    <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">{benefit.copy}</p>
+                  </div>
                 </motion.div>
               );
             })}
@@ -138,7 +177,19 @@ export default function BusinessConsultancy() {
         <div className="mx-auto max-w-7xl px-4 lg:px-8">
           <SectionHeader eyebrow="Capabilities" title="What we deliver" />
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {service.features.map((feature, index) => (
+            {[...new Set([
+              ...service.features,
+              'Comprehensive business diagnostics',
+              'Market entry and expansion strategy',
+              'Financial planning and analysis',
+              'Organizational design and restructuring',
+              'Mergers and acquisitions advisory',
+              'Business process reengineering',
+              'Digital transformation strategy',
+              'Competitive analysis and positioning',
+              'Risk management and mitigation',
+  
+            ])].map((feature, index) => (
               <motion.div key={feature} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.04 }} className="flex items-start gap-3 rounded-2xl bg-slate-50 p-5 shadow-sm dark:bg-slate-900">
                 <FiCheckCircle className="shrink-0 text-accent mt-0.5" size={20} />
                 <span className="text-sm font-semibold leading-6 text-primary dark:text-white">{feature}</span>
@@ -166,16 +217,7 @@ export default function BusinessConsultancy() {
           </div>
         </div>
       </section>
-      <section className="bg-white py-20 dark:bg-slate-950">
-        <div className="mx-auto max-w-7xl px-4 lg:px-8">
-          <SectionHeader eyebrow="Tech Stack" title="Platforms & tools we leverage" copy="We work with industry-leading platforms to deliver scalable, strategic, and secure consultancy." />
-          <div className="mt-12 flex flex-wrap justify-center gap-3">
-            {service.technologies.map((tech) => (
-              <span key={tech} className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-bold text-slate-700 transition-colors duration-300 hover:border-secondary hover:text-secondary dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">{tech}</span>
-            ))}
-          </div>
-        </div>
-      </section>
+     
       <section className="bg-slate-50 py-20 dark:bg-slate-900/40">
         <div className="mx-auto max-w-7xl px-4 lg:px-8">
           <SectionHeader eyebrow="Our Process" title="How we bring your vision to life" />
@@ -192,48 +234,32 @@ export default function BusinessConsultancy() {
                   </div>
                 </motion.div>
               ))}
+              {[
+                { step: '02', title: 'Strategy Formulation', copy: 'Develop actionable strategies based on diagnostics, market insights, and organizational priorities to drive sustainable growth.' },
+                { step: '03', title: 'Implementation Planning', copy: 'Create detailed roadmaps with clear milestones, resource allocation, and KPIs to ensure successful execution.' },
+                { step: '04', title: 'Change Management', copy: 'Lead organizational transformation with stakeholder alignment, communication plans, and capability building.' },
+                { step: '05', title: 'Performance Monitoring', copy: 'Track outcomes against targets, iterate on insights, and embed continuous improvement practices.' }
+              ].map((phase, index) => (
+                <motion.div key={phase.step} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: (service.process.length + index) * 0.1 }} className="relative grid gap-6 md:grid-cols-[80px_1fr] md:gap-10">
+                  <div className="hidden md:flex"><div className="relative z-10 inline-flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-4 border-white bg-secondary text-sm font-black text-white shadow-lg dark:border-slate-950">{phase.step}</div></div>
+                  <div className="md:pl-4">
+                    <div className="flex items-center gap-3 md:hidden"><span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-xs font-black text-white">{phase.step}</span><h3 className="text-lg font-black text-primary dark:text-white">{phase.title}</h3></div>
+                    <h3 className="hidden text-lg font-black text-primary dark:text-white md:block">{phase.title}</h3>
+                    <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">{phase.copy}</p>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </div>
       </section>
-      <section className="border-t border-slate-200 bg-slate-50 py-20 dark:border-slate-800 dark:bg-slate-900/40">
-        <div className="mx-auto max-w-7xl px-4 lg:px-8">
-          <SectionHeader eyebrow="Testimonials" title="Trusted by industry leaders" />
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {service.testimonials.map((testimonial, index) => (
-              <motion.div key={testimonial.author} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="relative rounded-3xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-                <div className="text-5xl font-serif leading-none text-secondary/20">&ldquo;</div>
-                <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">"{testimonial.quote}"</p>
-                <div className="mt-6 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary/10 text-sm font-black text-secondary">{testimonial.author.split(' ').map(n => n[0]).join('')}</div>
-                  <div><p className="text-sm font-bold text-primary dark:text-white">{testimonial.author}</p><p className="text-xs text-slate-500">{testimonial.role}, {testimonial.company}</p></div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-      <section className="bg-white py-20 dark:bg-slate-950">
-        <div className="mx-auto max-w-4xl px-4 lg:px-8">
-          <SectionHeader eyebrow="FAQs" title="Frequently asked questions" />
-          <div className="mt-12 space-y-4">
-            {service.faqs.map((faq, index) => (
-              <motion.div key={faq.q} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.06 }} className="rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-950">
-                <div className="flex items-start gap-3">
-                  <FiHelpCircle className="shrink-0 text-secondary mt-0.5" size={20} />
-                  <div><h3 className="font-bold text-primary dark:text-white">{faq.q}</h3><p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">{faq.a}</p></div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+     
       <section className="bg-white py-20 dark:bg-slate-950">
         <div className="mx-auto max-w-7xl px-4 lg:px-8">
-          <SectionHeader eyebrow="Continue Exploring" title="Related services" />
+          <SectionHeader eyebrow="Continue Exploring" title="All services" />
           <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {relatedServices.map((rs) => (
-              <ServiceCard key={rs.slug || rs._id} service={rs} index={0} />
+            {allServices.map((s, index) => (
+              <ServiceCard key={s.slug || s._id} service={s} index={index} />
             ))}
           </div>
         </div>

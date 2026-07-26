@@ -1,5 +1,9 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /login/
+
 Host: https://www.trimuryacorporation.in
 
 Sitemap: https://www.trimuryacorporation.in/sitemap.xml

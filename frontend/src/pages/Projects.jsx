@@ -1,10 +1,12 @@
 import { useState, useMemo, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { FiSearch, FiX } from 'react-icons/fi';
 import SectionHeader from '../components/SectionHeader.jsx';
 import StatsBar from '../components/StatsBar.jsx';
 import FilterBar from '../components/FilterBar.jsx';
 import ProjectCard from '../components/ProjectCard.jsx';
 import { fetchPublished } from '../services/contentApi.js';
+import { itemListSchema, breadcrumbSchema } from '../utils/seo.js';
 
 export default function Projects() {
   const [search, setSearch] = useState('');
@@ -53,80 +55,102 @@ export default function Projects() {
 
   const activeCount = [search, typeFilter, industryFilter].filter(Boolean).length;
 
+  const projectListSchema = projects.length > 0 ? itemListSchema(
+    projects.map((p) => ({
+      name: p.title,
+      description: p.summary,
+      url: `https://www.trimuryacorporation.in/projects/${p.slug || p._id}`
+    })),
+    'Trimurya Corporation Projects'
+  ) : null;
+
   return (
-    <section className="mx-auto max-w-7xl px-4 py-20 lg:px-8">
-      <SectionHeader
-        eyebrow="Portfolio"
-        title="Enterprise Projects & Case Studies"
-        copy="Explore our delivery records across AI, web, mobile, cloud, and enterprise transformation initiatives."
-      />
+    <>
+      <Helmet>
+        <title>Projects | Trimurya Corporation</title>
+        <meta name="description" content="See how Trimurya Corporation has enabled transformation through technology, data, and digital growth initiatives." />
+        <meta name="keywords" content="technology projects, AI implementation, digital transformation projects" />
+        <link rel="canonical" href="https://www.trimuryacorporation.in/projects" />
+        <script type="application/ld+json">{JSON.stringify(breadcrumbSchema([
+          { name: 'Home', url: 'https://www.trimuryacorporation.in/' },
+          { name: 'Projects', url: 'https://www.trimuryacorporation.in/projects' }
+        ]))}</script>
+        {projectListSchema && <script type="application/ld+json">{JSON.stringify(projectListSchema)}</script>}
+      </Helmet>
+      <section className="mx-auto max-w-7xl px-4 py-20 lg:px-8">
+        <SectionHeader
+          eyebrow="Portfolio"
+          title="Enterprise Projects & Case Studies"
+          copy="Explore our delivery records across AI, web, mobile, cloud, and enterprise transformation initiatives."
+        />
 
-      <StatsBar />
+        <StatsBar />
 
-      <FilterBar
-        search={search}
-        setSearch={setSearch}
-        typeFilter={typeFilter}
-        setTypeFilter={setTypeFilter}
-        industryFilter={industryFilter}
-        setIndustryFilter={setIndustryFilter}
-        sortOrder={sortOrder}
-        setSortOrder={setSortOrder}
-        types={projectTypes}
-        industries={industryOptions}
-      />
+        <FilterBar
+          search={search}
+          setSearch={setSearch}
+          typeFilter={typeFilter}
+          setTypeFilter={setTypeFilter}
+          industryFilter={industryFilter}
+          setIndustryFilter={setIndustryFilter}
+          sortOrder={sortOrder}
+          setSortOrder={setSortOrder}
+          types={projectTypes}
+          industries={industryOptions}
+        />
 
-      {activeCount > 0 && (
-        <div className="mb-6 flex flex-wrap items-center gap-2" data-aos="fade-up">
-          <span className="text-sm font-medium text-slate-500 dark:text-slate-400">Active filters:</span>
-          {search && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary/10 px-3 py-1 text-xs font-bold text-secondary dark:bg-secondary/20">
-              Search: {search}
-              <button onClick={() => setSearch('')} aria-label="Clear search"><FiX size={14} /></button>
-            </span>
-          )}
-          {typeFilter && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary/10 px-3 py-1 text-xs font-bold text-secondary dark:bg-secondary/20">
-              {typeFilter}
-              <button onClick={() => setTypeFilter('')} aria-label="Clear type filter"><FiX size={14} /></button>
-            </span>
-          )}
-          {industryFilter && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary/10 px-3 py-1 text-xs font-bold text-secondary dark:bg-secondary/20">
-              {industryFilter}
-              <button onClick={() => setIndustryFilter('')} aria-label="Clear industry filter"><FiX size={14} /></button>
-            </span>
-          )}
-          <button
-            onClick={() => { setSearch(''); setTypeFilter(''); setIndustryFilter(''); setSortOrder('newest'); }}
-            className="text-xs font-bold text-slate-400 underline decoration-slate-300 underline-offset-4 hover:text-secondary"
-          >
-            Clear all
-          </button>
-        </div>
-      )}
-
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-2">
-        {filtered.map((project, i) => (
-          <ProjectCard key={project.slug || project._id} project={project} index={i} />
-        ))}
-      </div>
-
-      {filtered.length === 0 && !loading && (
-        <div className="mt-16 text-center" data-aos="fade-up">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
-            <FiSearch size={28} className="text-slate-400" />
+        {activeCount > 0 && (
+          <div className="mb-6 flex flex-wrap items-center gap-2" data-aos="fade-up">
+            <span className="text-sm font-medium text-slate-500 dark:text-slate-400">Active filters:</span>
+            {search && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary/10 px-3 py-1 text-xs font-bold text-secondary dark:bg-secondary/20">
+                Search: {search}
+                <button onClick={() => setSearch('')} aria-label="Clear search"><FiX size={14} /></button>
+              </span>
+            )}
+            {typeFilter && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary/10 px-3 py-1 text-xs font-bold text-secondary dark:bg-secondary/20">
+                {typeFilter}
+                <button onClick={() => setTypeFilter('')} aria-label="Clear type filter"><FiX size={14} /></button>
+              </span>
+            )}
+            {industryFilter && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary/10 px-3 py-1 text-xs font-bold text-secondary dark:bg-secondary/20">
+                {industryFilter}
+                <button onClick={() => setIndustryFilter('')} aria-label="Clear industry filter"><FiX size={14} /></button>
+              </span>
+            )}
+            <button
+              onClick={() => { setSearch(''); setTypeFilter(''); setIndustryFilter(''); setSortOrder('newest'); }}
+              className="text-xs font-bold text-slate-400 underline decoration-slate-300 underline-offset-4 hover:text-secondary"
+            >
+              Clear all
+            </button>
           </div>
-          <h3 className="text-xl font-black text-primary dark:text-white">No projects found</h3>
-          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Try adjusting your filters or search query to discover more work.</p>
-        </div>
-      )}
+        )}
 
-      {!loading && (search || typeFilter || industryFilter) && filtered.length > 0 && (
-        <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
-          Showing {filtered.length} of {projects.length} projects
-        </p>
-      )}
-    </section>
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-2">
+          {filtered.map((project, i) => (
+            <ProjectCard key={project.slug || project._id} project={project} index={i} />
+          ))}
+        </div>
+
+        {filtered.length === 0 && !loading && (
+          <div className="mt-16 text-center" data-aos="fade-up">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
+              <FiSearch size={28} className="text-slate-400" />
+            </div>
+            <h3 className="text-xl font-black text-primary dark:text-white">No projects found</h3>
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Try adjusting your filters or search query to discover more work.</p>
+          </div>
+        )}
+
+        {!loading && (search || typeFilter || industryFilter) && filtered.length > 0 && (
+          <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
+            Showing {filtered.length} of {projects.length} projects
+          </p>
+        )}
+      </section>
+    </>
   );
 }

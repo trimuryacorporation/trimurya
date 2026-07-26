@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <defs>
+    <linearGradient id="shieldGrad" x1="200" y1="40" x2="200" y2="360" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f2b218"/>
+      <stop offset="1" stop-color="#ff7a12"/>
+    </linearGradient>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="400" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#061d5c"/>
+      <stop offset="1" stop-color="#0f2a6e"/>
+    </linearGradient>
+  </defs>
+  
+  <rect width="400" height="400" fill="url(#bgGrad)"/>
+  
+  <circle cx="200" cy="200" r="120" fill="rgba(242,178,24,0.06)" stroke="rgba(242,178,24,0.12)" stroke-width="2"/>
+  
+  <path d="M200 80L260 100L280 160L280 240L200 320L120 240L120 160L140 100L200 80Z" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
+  
+  <path d="M200 80L260 100L280 160L280 240L200 320L120 240L120 160L140 100L200 80Z" fill="url(#shieldGrad)" opacity="0.15"/>
+  
+  <path d="M200 100L245 115L260 165L260 230L200 290L140 230L140 165L155 115L200 100Z" fill="rgba(255,255,255,0.02)" stroke="url(#shieldGrad)" stroke-width="2"/>
+  
+  <path d="M175 190L192 207L225 174" stroke="url(#shieldGrad)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  
+  <circle cx="200" cy="340" r="6" fill="#f2b218" opacity="0.6"/>
+  <circle cx="200" cy="340" r="12" fill="none" stroke="#f2b218" stroke-width="1" opacity="0.3"/>
+  
+  <circle cx="80" cy="80" r="4" fill="#f2b218" opacity="0.4"/>
+  <circle cx="340" cy="340" r="3" fill="#ff7a12" opacity="0.4"/>
+  <circle cx="320" cy="60" r="2" fill="#ffffff" opacity="0.3"/>
+</svg>

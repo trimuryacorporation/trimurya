@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import CounterCard from '../components/CounterCard.jsx';
 import HeroSlider from '../components/HeroSlider.jsx';
 import SectionHeader from '../components/SectionHeader.jsx';
@@ -7,6 +8,7 @@ import Button from '../components/Button.jsx';
 import heroIllustration from '../assets/ai-hero.png';
 import { fetchPublished } from '../services/contentApi.js';
 import { resolveIcon } from '../utils/iconResolver.js';
+import { breadcrumbSchema, itemListSchema } from '../utils/seo.js';
 
 const processSteps = [
   {
@@ -47,6 +49,16 @@ export default function Home() {
 
   return (
     <>
+      <Helmet>
+        <title>AI, Technology & Talent Solutions | Trimurya Corporation</title>
+        <meta name="description" content="Trimurya Corporation helps businesses scale with AI, technology, recruitment, HR, digital marketing, telecom, call center, and media services." />
+        <meta name="keywords" content="Trimurya Corporation, AI services, technology solutions, recruitment, HR services, digital marketing, telecom, call center, media services" />
+        <link rel="canonical" href="https://www.trimuryacorporation.in/" />
+        <script type="application/ld+json">{JSON.stringify(breadcrumbSchema([
+          { name: 'Home', url: 'https://www.trimuryacorporation.in/' }
+        ]))}</script>
+      </Helmet>
+
       <HeroSlider />
 
       <section className="relative z-20 -mt-7 px-4 lg:px-8">
@@ -74,8 +86,13 @@ export default function Home() {
               </div>
             </div>
             <div className="mt-10 flex flex-wrap gap-4">
-              <Button to="/services">View Services</Button>
-              <Button to="/contact" variant="ghost" className="border-primary bg-slate-950/5 text-primary hover:bg-slate-950/10 dark:border-white/20 dark:bg-white/10 dark:text-white">Schedule a Strategy Call</Button>
+              <Button
+                to="/contact"
+                variant="ghost"
+                className="rounded-xl border border-yellow-500 bg-yellow-500 px-6 py-3 font-semibold text-white shadow-lg shadow-yellow-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:bg-yellow-600 hover:border-yellow-600 hover:shadow-xl"
+              >
+                Schedule a Strategy Call
+              </Button>
             </div>
           </div>
           <div className="relative overflow-hidden rounded-[7px] bg-slate-950/5 shadow-2xl dark:bg-white/10">
@@ -128,21 +145,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-20 lg:px-8">
-        <SectionHeader eyebrow="Case Studies" title="Outcomes for modern teams" copy="Selected examples where better delivery and digital design made a difference." />
-        <div className="grid gap-6 md:grid-cols-2">
-          {projects.map((project) => (
-            <article key={project.slug || project._id} className="group overflow-hidden rounded-[28px] border border-slate-200 bg-white p-8 shadow-xl transition hover:-translate-y-1 hover:shadow-2xl dark:border-slate-800 dark:bg-slate-950">
-              <p className="text-xs font-bold uppercase tracking-[0.24em] text-secondary">{project.type}</p>
-              <h3 className="mt-4 text-2xl font-black leading-tight text-primary dark:text-white">{project.title}</h3>
-              <p className="mt-3 text-sm font-semibold text-slate-500 dark:text-slate-300">{project.client}</p>
-              <div className="mt-6 rounded-3xl bg-secondary/10 px-4 py-4 text-sm font-black text-secondary dark:bg-secondary/20 dark:text-secondary">{project.summary}</div>
-              <p className="mt-5 text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">Technology</p>
-              <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{Array.isArray(project.tech) ? project.tech.join(', ') : project.tech}</p>
-            </article>
-          ))}
-        </div>
-      </section>
+     
 
       <section className="mx-auto max-w-7xl px-4 pb-20 lg:px-8">
         <div className="relative rounded-[32px] overflow-hidden shadow-[0_30px_100px_rgba(6,29,92,0.35)] sm:px-12 lg:px-16">

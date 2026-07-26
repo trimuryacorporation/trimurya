@@ -61,7 +61,7 @@ const ROUTE_METADATA = {
   },
   '/privacy-policy': {
     title: 'Privacy Policy',
-    description: 'Read Trimurya Corporation\'s privacy policy, terms of service, and cookie policy to understand how we protect and use your data.',
+    description: "Read Trimurya Corporation's privacy policy, terms of service, and cookie policy to understand how we protect and use your data.",
     keywords: 'privacy policy, terms of service, cookie policy, Trimurya Corporation data protection, GDPR compliance'
   }
 };
@@ -162,6 +162,121 @@ export function websiteSchema() {
       '@type': 'SearchAction',
       target: `${SITE_URL}/search?q={search_term_string}`,
       'query-input': 'required name=search_term_string'
+    }
+  };
+}
+
+export function breadcrumbSchema(items) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: item.url
+    }))
+  };
+}
+
+export function itemListSchema(items, listName) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: listName || 'Trimurya Corporation Items',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      url: item.url,
+      name: item.name,
+      description: item.description
+    }))
+  };
+}
+
+export function articleSchema(title, description, image, datePublished, authorName) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description: description,
+    image: image || `${SITE_URL}/og-image.svg`,
+    datePublished: datePublished || new Date().toISOString(),
+    author: {
+      '@type': 'Organization',
+      name: authorName || 'Trimurya Corporation'
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Trimurya Corporation',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${SITE_URL}/og-image.svg`
+      }
+    }
+  };
+}
+
+export function jobPostingSchema(job) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'JobPosting',
+    title: job.title,
+    description: job.description,
+    datePosted: job.datePosted || new Date().toISOString(),
+    employmentType: job.employmentType || 'FULL_TIME',
+    hiringOrganization: {
+      '@type': 'Organization',
+      name: 'Trimurya Corporation',
+      sameAs: SITE_URL
+    },
+    jobLocation: {
+      '@type': 'Place',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: job.location || 'India',
+        addressCountry: 'IN'
+      }
+    }
+  };
+}
+
+export function faqSchema(items) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer
+      }
+    }))
+  };
+}
+
+export function localBusinessSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: 'Trimurya Corporation',
+    image: `${SITE_URL}/og-image.svg`,
+    description: DEFAULT_DESCRIPTION,
+    url: SITE_URL,
+    telephone: '+91-000-000-0000',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'India',
+      addressLocality: 'India',
+      postalCode: '000000',
+      addressCountry: 'IN'
+    },
+    openingHoursSpecification: {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      opens: '09:00',
+      closes: '18:00'
     }
   };
 }

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500" fill="none">
+  <defs>
+    <linearGradient id="aiBg" x1="0" y1="0" x2="600" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#061d5c"/>
+      <stop offset="1" stop-color="#0f2a6e"/>
+    </linearGradient>
+    <linearGradient id="aiAccent" x1="300" y1="0" x2="300" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f2b218"/>
+      <stop offset="1" stop-color="#ff7a12"/>
+    </linearGradient>
+  </defs>
+  
+  <rect width="600" height="500" fill="url(#aiBg)"/>
+  
+  <g opacity="0.08">
+    <path d="M0 50L600 50M0 100L600 100M0 150L600 150M0 200L600 200M0 250L600 250M0 300L600 300M0 350L600 350M0 400L600 400M0 450L600 450M50 0L50 500M100 0L100 500M150 0L150 500M200 0L200 500M250 0L250 500M300 0L300 500M350 0L350 500M400 0L400 500M450 0L450 500M500 0L500 500M550 0L550 500" stroke="#f2b218" stroke-width="1"/>
+  </g>
+  
+  <circle cx="300" cy="250" r="180" fill="rgba(242,178,24,0.04)" stroke="rgba(242,178,24,0.1)" stroke-width="2"/>
+  <circle cx="300" cy="250" r="140" fill="rgba(242,178,24,0.03)" stroke="rgba(242,178,24,0.08)" stroke-width="1.5"/>
+  <circle cx="300" cy="250" r="100" fill="rgba(242,178,24,0.02)" stroke="rgba(242,178,24,0.06)" stroke-width="1"/>
+  
+  <g transform="translate(260, 210)" opacity="0.9">
+    <path d="M40 0L80 20L80 60L40 80L0 60L0 20L40 0Z" fill="none" stroke="url(#aiAccent)" stroke-width="3"/>
+    <path d="M40 20L60 30L60 50L40 60L20 50L20 30L40 20Z" fill="rgba(242,178,24,0.15)" stroke="url(#aiAccent)" stroke-width="1.5"/>
+    <circle cx="40" cy="40" r="8" fill="url(#aiAccent)"/>
+    <path d="M40 15L42 25L50 28L42 31L40 41L38 31L30 28L38 25L40 15Z" fill="url(#aiAccent)" opacity="0.6"/>
+  </g>
+  
+  <g opacity="0.7">
+    <circle cx="150" cy="150" r="6" fill="#f2b218"/>
+    <circle cx="450" cy="150" r="5" fill="#ff7a12"/>
+    <circle cx="150" cy="350" r="5" fill="#ff7a12"/>
+    <circle cx="450" cy="350" r="6" fill="#f2b218"/>
+    <circle cx="300" cy="120" r="4" fill="#ffffff" opacity="0.5"/>
+    <circle cx="300" cy="380" r="4" fill="#ffffff" opacity="0.5"/>
+    
+    <path d="M150 150L220 190M150 150L220 110M450 150L380 190M450 150L380 110M150 350L220 310M150 350L220 390M450 350L380 310M450 350L380 390" stroke="#f2b218" stroke-width="1" opacity="0.4"/>
+    <path d="M300 120L300 160M300 340L300 380" stroke="#ffffff" stroke-width="1" opacity="0.3"/>
+  </g>
+  
+  <g transform="translate(100, 420)" opacity="0.6">
+    <rect x="0" y="0" width="400" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <circle cx="30" cy="20" r="10" fill="rgba(242,178,24,0.15)" stroke="#f2b218" stroke-width="1"/>
+    <rect x="55" y="12" width="120" height="6" rx="3" fill="rgba(255,255,255,0.1)"/>
+    <rect x="55" y="24" width="80" height="4" rx="2" fill="rgba(255,255,255,0.05)"/>
+    <circle cx="350" cy="20" r="4" fill="#22c55e" opacity="0.8"/>
+    <rect x="330" y="14" width="30" height="6" rx="3" fill="rgba(34,197,94,0.2)"/>
+  </g>
+</svg>

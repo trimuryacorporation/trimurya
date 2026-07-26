@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiArrowUpRight } from 'react-icons/fi';
+import { FiArrowUpRight, FiBox } from 'react-icons/fi';
 import { resolveIcon } from '../utils/iconResolver.js';
 
 export default function ServiceCard({ service, index = 0 }) {
-  const Icon = resolveIcon(service.icon);
+  const Icon = resolveIcon(service.icon) || FiBox;
   const MotionLink = motion(Link);
 
   return (

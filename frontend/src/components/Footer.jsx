@@ -132,11 +132,7 @@ export default function Footer() {
               <p className="mt-6 text-[13px] leading-7 text-slate-400">
                 A multi-service enterprise partner unifying <span className="text-slate-300">AI</span>, <span className="text-slate-300">web</span>, <span className="text-slate-300">cloud</span>, <span className="text-slate-300">talent</span>, and <span className="text-slate-300">strategy</span> under one platform. We help businesses move faster, scale smarter, and compete with confidence.
               </p>
-              <div className="mt-6">
-                <Button to="/contact" className="bg-secondary text-white shadow-lg shadow-accent/20 hover:bg-accent/90 transition-all duration-300 text-xs font-bold px-6 py-3 rounded-xl">
-                  Start Your Project <FiArrowRight size={14} />
-                </Button>
-              </div>
+              
               <div className="mt-8 flex flex-wrap gap-2.5">
                 {trustBadges.map((badge) => {
                   const Icon = badge.icon;

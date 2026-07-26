@@ -1,9 +1,9 @@
-import { NavLink, Outlet, useLocation, Link } from 'react-router-dom';
+import { Outlet, useLocation, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { FiMenu, FiX, FiChevronDown, FiCircle, FiGlobe, FiDatabase, FiCpu, FiServer, FiLayers, FiCloud } from 'react-icons/fi';
 import { resolveIcon } from '../utils/iconResolver.js';
 import Button from '../components/Button.jsx';
-import AIChatAssistant from '../components/AIChatAssistant.jsx';
+
 import TextLogo from '../components/TextLogo.jsx';
 import Footer from '../components/Footer.jsx';
 import { setPageSeo } from '../utils/seo.js';
@@ -99,6 +99,8 @@ export default function MainLayout() {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [services, setServices] = useState([]);
   const [industries, setIndustries] = useState([]);
+  const [headerVisible, setHeaderVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const isMarketplace = location.pathname === '/marketplace' || location.pathname.startsWith('/marketplace/');
 
   const navLinks = [
@@ -145,6 +147,27 @@ export default function MainLayout() {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   }, [location.pathname, location.hash]);
 
+  useEffect(() => {
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const current = window.scrollY;
+          if (current > lastScrollY && current > 100) {
+            setHeaderVisible(false);
+          } else if (current < lastScrollY) {
+            setHeaderVisible(true);
+          }
+          setLastScrollY(current);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
+
   const iconMap = {
     'AI Data': 'FiDatabase',
     'Build AI': 'FiCpu',
@@ -156,7 +179,7 @@ export default function MainLayout() {
 
   return (
     <div className="min-h-screen bg-surface text-primary dark:bg-slate-950 dark:text-white">
-      <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-white/85 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-950/85">
+      <header className={`sticky top-0 z-40 border-b border-slate-200/70 bg-white/85 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-950/85 transition-transform duration-300 ${headerVisible ? 'translate-y-0' : '-translate-y-full'}`}>
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-4 py-3 lg:px-8">
           <TextLogo compact />
           {!isMarketplace ? (
@@ -167,23 +190,22 @@ export default function MainLayout() {
 
                   if (hasDropdown) {
                     return (
-                      <div key={link.path} className="relative">
-                        <NavLink
+                      <div
+                          key={link.path}
+                          className="relative"
+                          onMouseEnter={() => setOpenDropdown(link.label)}
+                          onMouseLeave={() => setOpenDropdown(null)}
+                        >
+                        <Link
                           to={link.path}
                           onClick={(e) => e.preventDefault()}
                           onMouseEnter={() => setOpenDropdown(link.label)}
                           onFocus={() => setOpenDropdown(link.label)}
-                          className={({ isActive }) =>
-                            `rounded-lg px-3 py-2 text-sm font-medium transition inline-flex items-center gap-1.5 ${
-                              isActive
-                                ? 'bg-secondary/10 text-secondary dark:bg-slate-950/50'
-                                : 'text-slate-600 hover:text-secondary dark:text-slate-300'
-                            }`
-                          }
+                          className="rounded-lg px-3 py-2 text-sm font-medium transition inline-flex items-center gap-1.5 text-slate-600 hover:text-[#061D5C] dark:text-slate-300"
                         >
                           {link.icon && (() => { const Icon = resolveIcon(link.icon); return <Icon size={16} />; })()}
                           {link.label.toUpperCase()}
-                        </NavLink>
+                        </Link>
 
                         {openDropdown === link.label && (
                           <div
@@ -221,25 +243,30 @@ export default function MainLayout() {
                   }
 
                   return (
-                    <NavLink
+                    <Link
                       key={link.path}
                       to={link.path}
-                      className={({ isActive }) =>
-                        `rounded-lg px-3 py-2 text-sm font-medium transition inline-flex items-center gap-1.5 ${
-                          isActive
-                            ? 'bg-secondary/10 text-secondary dark:bg-slate-950/50'
-                            : 'text-slate-600 hover:text-secondary dark:text-slate-300'
-                        }`
-                      }
+                      className="group relative flex items-center gap-2 px-3 py-2 text-[13px] font-semibold uppercase tracking-[0.15em] transition-all duration-300 text-slate-600 hover:text-[#061D5C]"
                     >
-                      {link.icon && (() => { const Icon = resolveIcon(link.icon); return <Icon size={16} />; })()}
-                      {link.label.toUpperCase()}
-                    </NavLink>
+                      {link.icon && (() => {
+                        const Icon = resolveIcon(link.icon);
+                        return (
+                          <Icon
+                            size={15}
+                            className="transition-transform duration-300 group-hover:scale-110"
+                          />
+                        );
+                      })()}
+
+                      <span>{link.label}</span>
+
+                      <span className="absolute bottom-0 left-3 h-[2px] w-0 bg-yellow-500 transition-all duration-300 group-hover:w-[calc(100%-24px)]"></span>
+                    </Link>
                   );
                 })}
               </nav>
               <div className="flex shrink-0 items-center gap-2">
-                <Button to="/marketplace" variant="ghost" className="hidden md:inline-flex">Marketplace</Button>
+                <Button to="/marketplace" variant="ghost" className="hidden md:inline-flex">AI Data Marketplace</Button>
                 <Button to="/contact" className="hidden md:inline-flex">Get Started</Button>
                 <button className="focus-ring p-3 lg:hidden" onClick={() => setOpen((value) => !value)} aria-label="Open navigation">
                   {open ? <FiX /> : <FiMenu />}
@@ -421,7 +448,7 @@ export default function MainLayout() {
                             {navDropdowns[link.label].map((item) => {
                               const ItemIcon = resolveIcon(item.icon);
                               return (
-                                <NavLink
+                                <Link
                                   key={item.label}
                                   to={item.href}
                                   onClick={() => { setOpen(false); setOpenDropdown(null); }}
@@ -429,7 +456,7 @@ export default function MainLayout() {
                                 >
                                   {ItemIcon && <ItemIcon size={16} />}
                                   {item.label}
-                                </NavLink>
+                                </Link>
                               );
                             })}
                           </div>
@@ -437,10 +464,10 @@ export default function MainLayout() {
                       );
                     }
                     return (
-                      <NavLink key={link.path} to={link.path} onClick={() => setOpen(false)} className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium text-slate-700 dark:text-slate-200">
+                      <Link key={link.path} to={link.path} onClick={() => setOpen(false)} className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-medium text-slate-700 dark:text-slate-200">
                         {link.icon && (() => { const Icon = resolveIcon(link.icon); return <Icon size={18} />; })()}
                         {link.label.toUpperCase()}
-                      </NavLink>
+                      </Link>
                     );
                   })}
                 </>
@@ -452,7 +479,7 @@ export default function MainLayout() {
         <Outlet />
       </main>
       <Footer />
-      <AIChatAssistant />
+
     </div>
   );
 }

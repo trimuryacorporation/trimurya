@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 600" fill="none">
+  <defs>
+    <linearGradient id="ctaBg" x1="0" y1="0" x2="1440" y2="600" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#061d5c"/>
+      <stop offset="1" stop-color="#0f2a6e"/>
+    </linearGradient>
+    <linearGradient id="ctaAccent" x1="720" y1="0" x2="720" y2="600" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f2b218"/>
+      <stop offset="1" stop-color="#ff7a12"/>
+    </linearGradient>
+  </defs>
+  
+  <rect width="1440" height="600" fill="url(#ctaBg)"/>
+  
+  <g opacity="0.08">
+    <path d="M0 50L1440 50M0 100L1440 100M0 150L1440 150M0 200L1440 200M0 250L1440 250M0 300L1440 300M0 350L1440 350M0 400L1440 400M0 450L1440 450M0 500L1440 500M0 550L1440 550M50 0L50 600M100 0L100 600M150 0L150 600M200 0L200 600M250 0L250 600M300 0L300 600M350 0L350 600M400 0L400 600M450 0L450 600M500 0L500 600M550 0L550 600M600 0L600 600M650 0L650 600M700 0L700 600M750 0L750 600M800 0L800 600M850 0L850 600M900 0L900 600M950 0L950 600M1000 0L1000 600M1050 0L1050 600M1100 0L1100 600M1150 0L1150 600M1200 0L1200 600M1250 0L1250 600M1300 0L1300 600M1350 0L1350 600M1400 0L1400 600" stroke="#f2b218" stroke-width="1"/>
+  </g>
+  
+  <circle cx="200" cy="300" r="300" fill="rgba(242,178,24,0.04)" stroke="rgba(242,178,24,0.08)" stroke-width="2"/>
+  <circle cx="1240" cy="300" r="250" fill="rgba(255,122,18,0.04)" stroke="rgba(255,122,18,0.08)" stroke-width="2"/>
+  
+  <g transform="translate(600, 180)" opacity="0.12">
+    <path d="M120 0L240 60L240 180L120 240L0 180L0 60L120 0Z" fill="none" stroke="url(#ctaAccent)" stroke-width="2"/>
+    <path d="M120 40L200 80L200 160L120 200L40 160L40 80L120 40Z" fill="none" stroke="url(#ctaAccent)" stroke-width="1.5"/>
+    <circle cx="120" cy="120" r="30" fill="none" stroke="url(#ctaAccent)" stroke-width="1"/>
+    <circle cx="120" cy="120" r="8" fill="url(#ctaAccent)"/>
+  </g>
+  
+  <g opacity="0.15">
+    <circle cx="180" cy="120" r="4" fill="#f2b218"/>
+    <circle cx="1260" cy="480" r="5" fill="#ff7a12"/>
+    <circle cx="360" cy="520" r="3" fill="#ffffff"/>
+    <circle cx="1080" cy="80" r="3" fill="#ffffff"/>
+    <circle cx="90" cy="420" r="2" fill="#f2b218"/>
+    <circle cx="1350" cy="180" r="2" fill="#ff7a12"/>
+  </g>
+  
+  <g opacity="0.1">
+    <path d="M180 120L240 80M180 120L220 180M240 80L300 120M220 180L280 220M1260 480L1200 440M1260 480L1220 520M1200 440L1140 480M1220 520L1180 560" stroke="#f2b218" stroke-width="1"/>
+  </g>
+</svg>

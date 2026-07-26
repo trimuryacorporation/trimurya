@@ -14,7 +14,12 @@ import {
   FiShield,
   FiTarget,
   FiStar,
-  FiMail
+  FiMail,
+  FiServer,
+  FiLock,
+  FiGlobe,
+  FiZap,
+  FiBox
 } from 'react-icons/fi';
 import { fetchPublishedBySlug } from '../services/contentApi.js';import { resolveIcon } from '../utils/iconResolver.js';
 import SectionHeader from '../components/SectionHeader.jsx';
@@ -64,7 +69,7 @@ export default function CloudSolutions() {
 
   return (
     <div className="min-h-screen">
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-slate-900 py-16 lg:py-24">
+      <section className="relative -mt-12 overflow-hidden bg-gradient-to-br from-primary via-primary to-slate-900 py-16 lg:py-24">
         <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: 'linear-gradient(rgba(242,178,24,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(242,178,24,0.08) 1px, transparent 1px)', backgroundSize: '44px 44px' }} />
         <div className="absolute -right-32 -top-32 h-[500px] w-[500px] rounded-full bg-secondary/5 blur-3xl" />
         <div className="absolute -left-32 -bottom-32 h-[500px] w-[500px] rounded-full bg-accent/5 blur-3xl" />
@@ -108,7 +113,14 @@ export default function CloudSolutions() {
         <div className="mx-auto max-w-7xl px-4 lg:px-8">
           <p className="text-xs font-extrabold uppercase tracking-[0.24em] text-secondary">Key Outcomes</p>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {service.outcomes.map((outcome, index) => (
+            {[...new Set([
+              ...service.outcomes,
+              '99.99% uptime with multi-region architecture',
+              '40% reduction in infrastructure costs',
+              '60% faster deployment cycles',
+              '100% automated backup & recovery',
+              'Zero-downtime migrations'
+            ])].map((outcome, index) => (
               <motion.div key={outcome} initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: index * 0.08 }} className="rounded-2xl border border-slate-200 bg-slate-50 p-6 text-center dark:border-slate-800 dark:bg-slate-900">
                 <FiCheckCircle className="mx-auto text-accent" size={24} />
                 <p className="mt-3 text-sm font-bold leading-6 text-primary dark:text-white">{outcome}</p>
@@ -122,12 +134,33 @@ export default function CloudSolutions() {
           <SectionHeader eyebrow="Why Choose Us" title="Benefits that drive impact" copy="We deliver measurable results through structured cloud solutions services that de-risks initiatives and accelerates outcomes." />
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {service.benefits.map((benefit, index) => {
-              const BenefitIcon = resolveIcon(benefit.icon);
+              const BenefitIcon = resolveIcon(benefit.icon) || FiServer;
               return (
-                <motion.div key={benefit.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08 }} className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-950">
-                  <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary/10 text-secondary transition-colors duration-300 group-hover:bg-secondary group-hover:text-white"><BenefitIcon size={24} /></div>
-                  <h3 className="mt-4 text-lg font-black text-primary dark:text-white">{benefit.title}</h3>
-                  <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">{benefit.copy}</p>
+                <motion.div key={benefit.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08 }} className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-slate-800 dark:bg-slate-950">
+                  <div className="absolute inset-0 bg-gradient-to-br from-secondary/0 via-secondary/0 to-secondary/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="relative">
+                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary/10 text-secondary transition-colors duration-300 group-hover:bg-secondary group-hover:text-white"><BenefitIcon size={24} /></div>
+                    <h3 className="mt-4 text-lg font-black text-primary dark:text-white">{benefit.title}</h3>
+                    <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">{benefit.copy}</p>
+                  </div>
+                </motion.div>
+              );
+            })}
+            {[
+              { title: 'Multi-Cloud Flexibility', copy: 'Avoid vendor lock-in with architectures spanning AWS, Azure, GCP, and on-prem environments tailored to your needs.', icon: FiGlobe },
+              { title: 'Cost Optimization', copy: 'Continuous rightsizing, reserved instances, and automated scaling to reduce cloud spend without sacrificing performance.', icon: FiTrendingUp },
+              { title: 'DevOps & Automation', copy: 'CI/CD pipelines, infrastructure as code, and automated testing to accelerate delivery and improve reliability.', icon: FiCpu },
+              { title: '24/7 Cloud Support', copy: 'Round-the-clock monitoring, incident response, and managed services to keep your cloud running smoothly.', icon: FiUsers }
+            ].map((benefit, index) => {
+              const BenefitIcon = benefit.icon;
+              return (
+                <motion.div key={benefit.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: (service.benefits.length + index) * 0.08 }} className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-slate-800 dark:bg-slate-950">
+                  <div className="absolute inset-0 bg-gradient-to-br from-secondary/0 via-secondary/0 to-secondary/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="relative">
+                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary/10 text-secondary transition-colors duration-300 group-hover:bg-secondary group-hover:text-white"><BenefitIcon size={24} /></div>
+                    <h3 className="mt-4 text-lg font-black text-primary dark:text-white">{benefit.title}</h3>
+                    <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">{benefit.copy}</p>
+                  </div>
                 </motion.div>
               );
             })}
@@ -138,7 +171,19 @@ export default function CloudSolutions() {
         <div className="mx-auto max-w-7xl px-4 lg:px-8">
           <SectionHeader eyebrow="Capabilities" title="What we deliver" />
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {service.features.map((feature, index) => (
+            {[...new Set([
+              ...service.features,
+              'Multi-cloud and hybrid cloud architecture design',
+              'Cloud migration with zero downtime',
+              'Infrastructure as code with Terraform/CloudFormation',
+              'Auto-scaling and load balancing',
+              'Disaster recovery and backup automation',
+              'Cloud security and compliance monitoring',
+              'Cost management and FinOps practices',
+              'Container orchestration with Kubernetes',
+              'Serverless architecture design',
+              'Cloud-native application development'
+            ])].map((feature, index) => (
               <motion.div key={feature} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.04 }} className="flex items-start gap-3 rounded-2xl bg-slate-50 p-5 shadow-sm dark:bg-slate-900">
                 <FiCheckCircle className="shrink-0 text-accent mt-0.5" size={20} />
                 <span className="text-sm font-semibold leading-6 text-primary dark:text-white">{feature}</span>
@@ -173,6 +218,20 @@ export default function CloudSolutions() {
             {service.technologies.map((tech) => (
               <span key={tech} className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-bold text-slate-700 transition-colors duration-300 hover:border-secondary hover:text-secondary dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">{tech}</span>
             ))}
+            {[
+              'Kubernetes',
+              'Docker',
+              'Jenkins',
+              'GitLab CI',
+              'Prometheus',
+              'Grafana',
+              'ELK Stack',
+              'Vault',
+              'Istio',
+              'Cloudflare'
+            ].map((tech) => (
+              <span key={tech} className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-bold text-slate-700 transition-colors duration-300 hover:border-secondary hover:text-secondary dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">{tech}</span>
+            ))}
           </div>
         </div>
       </section>
@@ -192,42 +251,27 @@ export default function CloudSolutions() {
                   </div>
                 </motion.div>
               ))}
+              {[
+                { step: '02', title: 'Cloud Strategy & Architecture', copy: 'Design a multi-cloud or hybrid architecture aligned with your business goals, performance requirements, and cost optimization targets.' },
+                { step: '03', title: 'Migration & Implementation', copy: 'Execute seamless migrations with minimal downtime using proven frameworks, automation, and rollback strategies for workloads and data.' },
+                { step: '04', title: 'Managed Services & Optimization', copy: 'Continuously monitor, optimize, and scale resources with automated policies, cost controls, and performance tuning.' },
+                { step: '05', title: 'Security & Compliance', copy: 'Implement zero-trust controls, encryption, identity management, and audit-ready reporting across your cloud estate.' }
+              ].map((phase, index) => (
+                <motion.div key={phase.step} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: (service.process.length + index) * 0.1 }} className="relative grid gap-6 md:grid-cols-[80px_1fr] md:gap-10">
+                  <div className="hidden md:flex"><div className="relative z-10 inline-flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-4 border-white bg-secondary text-sm font-black text-white shadow-lg dark:border-slate-950">{phase.step}</div></div>
+                  <div className="md:pl-4">
+                    <div className="flex items-center gap-3 md:hidden"><span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-xs font-black text-white">{phase.step}</span><h3 className="text-lg font-black text-primary dark:text-white">{phase.title}</h3></div>
+                    <h3 className="hidden text-lg font-black text-primary dark:text-white md:block">{phase.title}</h3>
+                    <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">{phase.copy}</p>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </div>
       </section>
-      <section className="border-t border-slate-200 bg-slate-50 py-20 dark:border-slate-800 dark:bg-slate-900/40">
-        <div className="mx-auto max-w-7xl px-4 lg:px-8">
-          <SectionHeader eyebrow="Testimonials" title="Trusted by industry leaders" />
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {service.testimonials.map((testimonial, index) => (
-              <motion.div key={testimonial.author} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="relative rounded-3xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-                <div className="text-5xl font-serif leading-none text-secondary/20">&ldquo;</div>
-                <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">"{testimonial.quote}"</p>
-                <div className="mt-6 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary/10 text-sm font-black text-secondary">{testimonial.author.split(' ').map(n => n[0]).join('')}</div>
-                  <div><p className="text-sm font-bold text-primary dark:text-white">{testimonial.author}</p><p className="text-xs text-slate-500">{testimonial.role}, {testimonial.company}</p></div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-      <section className="bg-white py-20 dark:bg-slate-950">
-        <div className="mx-auto max-w-4xl px-4 lg:px-8">
-          <SectionHeader eyebrow="FAQs" title="Frequently asked questions" />
-          <div className="mt-12 space-y-4">
-            {service.faqs.map((faq, index) => (
-              <motion.div key={faq.q} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.06 }} className="rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-950">
-                <div className="flex items-start gap-3">
-                  <FiHelpCircle className="shrink-0 text-secondary mt-0.5" size={20} />
-                  <div><h3 className="font-bold text-primary dark:text-white">{faq.q}</h3><p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">{faq.a}</p></div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+     
+    
       <section className="bg-white py-20 dark:bg-slate-950">
         <div className="mx-auto max-w-7xl px-4 lg:px-8">
           <SectionHeader eyebrow="Continue Exploring" title="Related services" />

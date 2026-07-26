@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { FiAward, FiBriefcase, FiCheckCircle, FiClock, FiGlobe, FiHeart, FiLayers, FiShield, FiTarget, FiTrendingUp, FiUsers, FiZap } from 'react-icons/fi';
 import { resolveIcon } from '../utils/iconResolver.js';
 import SectionHeader from '../components/SectionHeader.jsx';
 import Button from '../components/Button.jsx';
 import { fetchPublished } from '../services/contentApi.js';
 import heroBackground from '../assets/ai-hero.png';
+import { organizationSchema, breadcrumbSchema } from '../utils/seo.js';
 
 const storyMilestones = [
   { year: '2018', event: 'Founded as a technology consulting firm with a focus on enterprise digital transformation' },
@@ -170,6 +172,17 @@ export default function About() {
 
   return (
     <>
+      <Helmet>
+        <title>About Trimurya Corporation</title>
+        <meta name="description" content="Learn about Trimurya Corporation and our mission to empower businesses through innovation, technology, and talent." />
+        <meta name="keywords" content="about Trimurya Corporation, AI company, technology services, business transformation" />
+        <link rel="canonical" href="https://www.trimuryacorporation.in/about" />
+        <script type="application/ld+json">{JSON.stringify(organizationSchema())}</script>
+        <script type="application/ld+json">{JSON.stringify(breadcrumbSchema([
+          { name: 'Home', url: 'https://www.trimuryacorporation.in/' },
+          { name: 'About Us', url: 'https://www.trimuryacorporation.in/about' }
+        ]))}</script>
+      </Helmet>
       {/* Hero Section */}
       <section className="relative min-h-[85vh] overflow-hidden bg-primary" data-section="hero">
         <div className="absolute inset-0">

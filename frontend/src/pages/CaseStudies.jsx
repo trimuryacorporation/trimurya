@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 import {
   FiHome,
   FiChevronRight,
@@ -18,6 +19,7 @@ import { Link } from 'react-router-dom';
 import Button from '../components/Button.jsx';
 import SectionHeader from '../components/SectionHeader.jsx';
 import { fetchPublished } from '../services/contentApi.js';
+import { breadcrumbSchema } from '../utils/seo.js';
 
 const industries = ['All', 'Finance', 'Healthcare', 'Retail', 'Technology', 'Manufacturing'];
 
@@ -188,7 +190,18 @@ export default function CaseStudies() {
   const featured = caseStudies.filter((cs) => cs.featured);
 
   return (
-    <div className="min-h-screen">
+    <>
+      <Helmet>
+        <title>Case Studies | Trimurya Corporation</title>
+        <meta name="description" content="Enterprise case studies and project outcomes from Trimurya Corporation across AI, cloud, digital transformation, and more." />
+        <meta name="keywords" content="case studies, enterprise projects, AI projects, digital transformation, cloud migration, success stories" />
+        <link rel="canonical" href="https://www.trimuryacorporation.in/case_studies" />
+        <script type="application/ld+json">{JSON.stringify(breadcrumbSchema([
+          { name: 'Home', url: 'https://www.trimuryacorporation.in/' },
+          { name: 'Case Studies', url: 'https://www.trimuryacorporation.in/case_studies' }
+        ]))}</script>
+      </Helmet>
+      <div className="min-h-screen">
       <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-slate-900 py-20 lg:py-28">
         <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'linear-gradient(rgba(242,178,24,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(242,178,24,0.12) 1px, transparent 1px)', backgroundSize: '48px 48px' }} />
         <div className="absolute -right-40 -top-40 h-[600px] w-[600px] rounded-full bg-secondary/5 blur-3xl" />
@@ -420,5 +433,6 @@ export default function CaseStudies() {
         </div>
       </section>
     </div>
+    </>
   );
 }
