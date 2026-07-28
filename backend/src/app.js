@@ -4,12 +4,9 @@ import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
 import apiRoutes from './routes/index.js';
 import { errorHandler, notFound } from './middlewares/errorMiddleware.js';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 
 app.use(helmet());
@@ -28,10 +25,6 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use('/api', apiRoutes);
-app.use(express.static(join(__dirname, '..', '..', 'frontend', 'dist')));
-app.get('*', (req, res) => {
-  res.sendFile(join(__dirname, '..', '..', 'frontend', 'dist', 'index.html'));
-});
 app.use(notFound);
 app.use(errorHandler);
 
