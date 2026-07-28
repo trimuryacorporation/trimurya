@@ -18,9 +18,3 @@ Frontend runs on `http://localhost:5173`.
 Backend runs on `http://localhost:5000`.
 
 Copy `backend/.env.example` to `backend/.env` and update values for production.
-# trimurya
-# trimurya
-# trimurya
-# trimurya
-# trimurya
-# trimurya
