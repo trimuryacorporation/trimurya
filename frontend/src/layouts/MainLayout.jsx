@@ -21,6 +21,28 @@ function serviceSlug(title) {
   return title.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
+const FALLBACK_SERVICES = [
+  { title: 'AI Project Management', icon: 'FiCpu' },
+  { title: 'Website Development', icon: 'FiGlobe' },
+  { title: 'Digital Marketing', icon: 'FiTrendingUp' },
+  { title: 'Business Consultancy', icon: 'FiBriefcase' },
+  { title: 'HR Consultancy', icon: 'FiUsers' },
+  { title: 'Mobile App Development', icon: 'FiLayers' },
+  { title: 'Cloud Solutions', icon: 'FiCloud' },
+  { title: 'Cybersecurity', icon: 'FiShield' }
+];
+
+const FALLBACK_INDUSTRIES = [
+  { title: 'Healthcare', icon: 'FiHeart' },
+  { title: 'Finance', icon: 'FiDatabase' },
+  { title: 'Retail', icon: 'FiShoppingBag' },
+  { title: 'Technology', icon: 'FiCpu' },
+  { title: 'Manufacturing', icon: 'FiTool' },
+  { title: 'Education', icon: 'FiBookOpen' },
+  { title: 'Government', icon: 'FiHome' },
+  { title: 'Telecom', icon: 'FiPhone' }
+];
+
 const marketplaceLinks = [
   {
     label: 'AI Data',
@@ -125,8 +147,15 @@ export default function MainLayout() {
   };
 
   useEffect(() => {
-    Promise.all([fetchPublished('services'), fetchPublished('industries')])
-      .then(([s, i]) => { setServices(s); setIndustries(i); });
+    Promise.all([fetchPublished('services').catch(() => []), fetchPublished('industries').catch(() => [])])
+      .then(([s, i]) => {
+        setServices(Array.isArray(s) && s.length > 0 ? s : FALLBACK_SERVICES);
+        setIndustries(Array.isArray(i) && i.length > 0 ? i : FALLBACK_INDUSTRIES);
+      })
+      .catch(() => {
+        setServices(FALLBACK_SERVICES);
+        setIndustries(FALLBACK_INDUSTRIES);
+      });
   }, []);
 
   const toggleDropdown = (label) => setOpenDropdown((current) => (current === label ? null : label));
