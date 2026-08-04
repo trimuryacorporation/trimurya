@@ -22,6 +22,7 @@ import ServiceCard from './ServiceCard.jsx';
 import Button from './Button.jsx';
 import SeoHead from './SeoHead.jsx';
 import { breadcrumbSchema, serviceSchema } from '../utils/seo.js';
+import { getFallbackService, getFallbackServices } from '../data/serviceContent.js';
 
 function normalizeArray(value, fallback = []) {
   if (Array.isArray(value) && value.length > 0) return value;
@@ -93,6 +94,7 @@ export default function ServiceDetailPage({ slug, heroImage, eyebrow = 'Service'
   const [relatedServices, setRelatedServices] = useState([]);
   const [allServices, setAllServices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const fallbackService = getFallbackService(slug);
 
   useEffect(() => {
     let cancelled = false;
@@ -100,25 +102,34 @@ export default function ServiceDetailPage({ slug, heroImage, eyebrow = 'Service'
     async function load() {
       setLoading(true);
       try {
-        const primary = await fetchPublishedBySlug('services', slug);
+        const primary = await fetchPublishedBySlug('services', slug).catch(() => null);
         if (cancelled) return;
+        const currentService = primary || fallbackService;
 
-        if (primary) {
-          setService(primary);
-          const related = normalizeArray(primary.related);
+        if (currentService) {
+          setService(currentService);
+          const related = normalizeArray(currentService.related);
           if (related.length > 0) {
-            const relatedItems = await Promise.all(related.map((relatedSlug) => fetchPublishedBySlug('services', relatedSlug)));
+            const relatedItems = await Promise.all(
+              related.map(async (relatedSlug) => (
+                (await fetchPublishedBySlug('services', relatedSlug).catch(() => null)) || getFallbackService(relatedSlug)
+              ))
+            );
             if (!cancelled) {
               setRelatedServices(relatedItems.filter(Boolean));
             }
           } else {
             setRelatedServices([]);
           }
+        } else {
+          setService(null);
+          setRelatedServices([]);
         }
 
-        const services = await fetchPublished('services');
+        const services = await fetchPublished('services').catch(() => []);
         if (!cancelled) {
-          setAllServices(Array.isArray(services) ? services.filter((item) => item.slug !== slug) : []);
+          const serviceItems = Array.isArray(services) && services.length > 0 ? services : getFallbackServices();
+          setAllServices(serviceItems.filter((item) => item.slug !== slug));
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -134,20 +145,20 @@ export default function ServiceDetailPage({ slug, heroImage, eyebrow = 'Service'
     };
   }, [slug]);
 
-  const heroStats = useMemo(() => normalizeArray(service?.heroStats, defaultHeroStats(service?.title)), [service]);
-  const benefits = useMemo(() => normalizeArray(service?.benefits, defaultBenefits(service?.title)), [service]);
-  const features = useMemo(() => normalizeArray(service?.features, defaultFeatures(service?.title)), [service]);
-  const process = useMemo(() => normalizeArray(service?.process, defaultProcess()), [service]);
-  const testimonials = useMemo(() => normalizeArray(service?.testimonials, defaultTestimonials(service?.title)), [service]);
-  const faqs = useMemo(() => normalizeArray(service?.faqs, defaultFaqs(service?.title)), [service]);
-  const outcomes = useMemo(() => normalizeArray(service?.outcomes, [`Better ${service?.title || 'service'} visibility`, 'Clear delivery structure', 'Higher conversion quality']), [service]);
-  const technologies = useMemo(() => normalizeArray(service?.technologies, ['Strategy', 'Design', 'Development', 'Optimization']), [service]);
-  const serviceItems = useMemo(() => normalizeArray(service?.items, normalizeArray(service?.features, normalizeArray(service?.technologies, []))).slice(0, 6), [service]);
+  const activeService = service || fallbackService;
+  const heroStats = useMemo(() => normalizeArray(activeService?.heroStats, defaultHeroStats(activeService?.title)), [activeService]);
+  const benefits = useMemo(() => normalizeArray(activeService?.benefits, defaultBenefits(activeService?.title)), [activeService]);
+  const features = useMemo(() => normalizeArray(activeService?.features, defaultFeatures(activeService?.title)), [activeService]);
+  const process = useMemo(() => normalizeArray(activeService?.process, defaultProcess()), [activeService]);
+  const testimonials = useMemo(() => normalizeArray(activeService?.testimonials, defaultTestimonials(activeService?.title)), [activeService]);
+  const faqs = useMemo(() => normalizeArray(activeService?.faqs, defaultFaqs(activeService?.title)), [activeService]);
+  const outcomes = useMemo(() => normalizeArray(activeService?.outcomes, [`Better ${activeService?.title || 'service'} visibility`, 'Clear delivery structure', 'Higher conversion quality']), [activeService]);
+  const technologies = useMemo(() => normalizeArray(activeService?.technologies, ['Strategy', 'Design', 'Development', 'Optimization']), [activeService]);
   const canonicalPath = `/services/${slug}`;
   const breadcrumbs = [
     { name: 'Home', url: 'https://www.trimuryacorporation.in/' },
     { name: 'Services', url: 'https://www.trimuryacorporation.in/services' },
-    { name: service?.title || slugify(slug), url: `https://www.trimuryacorporation.in${canonicalPath}` }
+    { name: activeService?.title || slugify(slug), url: `https://www.trimuryacorporation.in${canonicalPath}` }
   ];
 
   if (loading) {
@@ -158,7 +169,7 @@ export default function ServiceDetailPage({ slug, heroImage, eyebrow = 'Service'
     );
   }
 
-  if (!service) {
+  if (!activeService) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-20 lg:px-8">
         <SeoHead pathname={canonicalPath} title="Service not found" description="The requested service page could not be found." noindex />
@@ -167,17 +178,17 @@ export default function ServiceDetailPage({ slug, heroImage, eyebrow = 'Service'
     );
   }
 
-  const serviceDescription = service.longDescription || service.summary || service.description || '';
+  const serviceDescription = activeService.longDescription || activeService.summary || activeService.description || '';
 
   return (
     <div className="min-h-screen">
       <SeoHead
         pathname={canonicalPath}
-        title={service.title}
+        title={activeService.title}
         description={serviceDescription}
-        keywords={[service.title, ...(technologies || []), 'Trimurya Corporation'].filter(Boolean).join(', ')}
+        keywords={[activeService.title, ...(technologies || []), 'Trimurya Corporation'].filter(Boolean).join(', ')}
         image={heroImage}
-        schemas={[serviceSchema(service)]}
+        schemas={[serviceSchema(activeService)]}
         breadcrumbs={breadcrumbs}
       />
 
@@ -194,7 +205,7 @@ export default function ServiceDetailPage({ slug, heroImage, eyebrow = 'Service'
             <FiChevronRight size={14} className="text-slate-500" />
             <Link to="/services" className="text-slate-400 transition-colors hover:text-secondary">Services</Link>
             <FiChevronRight size={14} className="text-slate-500" />
-            <span className="font-semibold text-white">{service.title}</span>
+            <span className="font-semibold text-white">{activeService.title}</span>
           </nav>
 
           <div className="mt-10 grid gap-10 lg:grid-cols-2 lg:items-center">
@@ -203,7 +214,7 @@ export default function ServiceDetailPage({ slug, heroImage, eyebrow = 'Service'
                 <FiCpu size={14} />
                 {introLabel || eyebrow}
               </div>
-              <h1 className="mt-6 text-4xl font-black leading-tight text-white md:text-6xl">{service.title}</h1>
+              <h1 className="mt-6 text-4xl font-black leading-tight text-white md:text-6xl">{activeService.title}</h1>
               <p className="mt-6 text-lg leading-8 text-slate-300">{serviceDescription}</p>
               <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
                 {heroStats.map((stat) => (
@@ -226,7 +237,7 @@ export default function ServiceDetailPage({ slug, heroImage, eyebrow = 'Service'
 
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6, delay: 0.2 }} className="relative">
               <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-2 shadow-2xl shadow-black/20 backdrop-blur-sm">
-                <img src={heroImage} alt={service.title} className="w-full rounded-2xl" loading="eager" />
+                <img src={heroImage} alt={activeService.title} className="w-full rounded-2xl" loading="eager" />
               </div>
               <div className="absolute -bottom-4 -right-4 h-24 w-24 rounded-full bg-secondary/20 blur-2xl" />
               <div className="absolute -top-4 -left-4 h-32 w-32 rounded-full bg-accent/20 blur-2xl" />
@@ -251,7 +262,7 @@ export default function ServiceDetailPage({ slug, heroImage, eyebrow = 'Service'
 
       <section className="bg-slate-50 py-20 dark:bg-slate-900/40">
         <div className="mx-auto max-w-7xl px-4 lg:px-8">
-          <SectionHeader eyebrow="Why Choose Us" title="Benefits that drive impact" copy={`We deliver measurable results through structured ${service.title.toLowerCase()} services that keep your project organized and moving.`} />
+          <SectionHeader eyebrow="Why Choose Us" title="Benefits that drive impact" copy={`We deliver measurable results through structured ${activeService.title.toLowerCase()} services that keep your project organized and moving.`} />
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {benefits.map((benefit, index) => {
               const BenefitIcon = resolveIcon(benefit.icon) || FiStar;
@@ -382,7 +393,7 @@ export default function ServiceDetailPage({ slug, heroImage, eyebrow = 'Service'
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, #fff 1px, transparent 0)', backgroundSize: '32px 32px' }} />
         <div className="relative mx-auto max-w-5xl px-4 text-center lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <h2 className="text-3xl font-black leading-tight text-white md:text-4xl">Ready to get started with {service.title}?</h2>
+            <h2 className="text-3xl font-black leading-tight text-white md:text-4xl">Ready to get started with {activeService.title}?</h2>
             <p className="mt-4 text-lg leading-8 text-white/90">Let's discuss your requirements and shape the right engagement model.</p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <Button to="/contact" className="bg-white text-primary shadow-lg hover:bg-slate-100">
