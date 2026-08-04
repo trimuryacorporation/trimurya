@@ -8,6 +8,7 @@ import TextLogo from '../components/TextLogo.jsx';
 import Footer from '../components/Footer.jsx';
 import { fetchPublished } from '../services/contentApi.js';
 import SeoHead from '../components/SeoHead.jsx';
+import { SERVICE_PAGES } from '../data/services.js';
 
 const iconNameMap = {
   'Services': 'FiLayers',
@@ -16,21 +17,6 @@ const iconNameMap = {
   'Pricing': 'FiServer',
   'Our Company': 'FiGlobe',
 };
-
-function serviceSlug(title) {
-  return title.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-}
-
-const FALLBACK_SERVICES = [
-  { title: 'AI Project Management', icon: 'FiCpu' },
-  { title: 'Website Development', icon: 'FiGlobe' },
-  { title: 'Digital Marketing', icon: 'FiTrendingUp' },
-  { title: 'Business Consultancy', icon: 'FiBriefcase' },
-  { title: 'HR Consultancy', icon: 'FiUsers' },
-  { title: 'Mobile App Development', icon: 'FiLayers' },
-  { title: 'Cloud Solutions', icon: 'FiCloud' },
-  { title: 'Cybersecurity', icon: 'FiShield' }
-];
 
 const FALLBACK_INDUSTRIES = [
   { title: 'Healthcare', icon: 'FiHeart' },
@@ -119,11 +105,11 @@ export default function MainLayout() {
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
-  const [services, setServices] = useState([]);
   const [industries, setIndustries] = useState([]);
   const [headerVisible, setHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const isMarketplace = location.pathname === '/marketplace' || location.pathname.startsWith('/marketplace/');
+  const services = SERVICE_PAGES;
 
   const navLinks = [
     { label: 'Home', path: '/', icon: 'FiHome' },
@@ -134,7 +120,7 @@ export default function MainLayout() {
   ];
 
   const navDropdowns = {
-    Services: services.map((service) => ({ label: service.title, href: `/services/${serviceSlug(service.title)}`, icon: service.icon || 'FiLayers' })),
+    Services: services.map((service) => ({ label: service.title, href: `/services/${service.slug}`, icon: service.icon || 'FiLayers' })),
     Industries: industries.slice(0, 8).map((industry, index) => ({ label: industry.title, href: '/industries', icon: industry.icon || ['FiActivity', 'FiCloud', 'FiCpu', 'FiShield', 'FiTarget', 'FiTrendingUp', 'FiFilm', 'FiHeadphones'][index] })),
     Projects: [
       { label: 'AI Delivery Rollout', href: '/projects', icon: 'FiCpu' },
@@ -147,13 +133,11 @@ export default function MainLayout() {
   };
 
   useEffect(() => {
-    Promise.all([fetchPublished('services').catch(() => []), fetchPublished('industries').catch(() => [])])
-      .then(([s, i]) => {
-        setServices(Array.isArray(s) && s.length > 0 ? s : FALLBACK_SERVICES);
-        setIndustries(Array.isArray(i) && i.length > 0 ? i : FALLBACK_INDUSTRIES);
+    fetchPublished('industries')
+      .then((data) => {
+        setIndustries(Array.isArray(data) && data.length > 0 ? data : FALLBACK_INDUSTRIES);
       })
       .catch(() => {
-        setServices(FALLBACK_SERVICES);
         setIndustries(FALLBACK_INDUSTRIES);
       });
   }, []);

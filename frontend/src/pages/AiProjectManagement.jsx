@@ -1,14 +1,9 @@
-import ServiceDetailPage from '../components/ServiceDetailPage.jsx';
+import StandaloneServicePage from '../components/StandaloneServicePage.jsx';
+import { getServicePageBySlug } from '../data/services.js';
 import aiPmHero from '../assets/ai-project-management-hero.svg';
 
 export default function AiProjectManagement() {
   return (
-    <ServiceDetailPage
-      slug="ai-project-management"
-      heroImage={aiPmHero}
-      eyebrow="AI Delivery"
-      introLabel="AI Program Delivery"
-      introCopy="Turn AI initiatives into structured programs with visible milestones, accountability, and measurable delivery."
-    />
+    <StandaloneServicePage service={getServicePageBySlug('ai-project-management')} heroImage={aiPmHero} />
   );
 }

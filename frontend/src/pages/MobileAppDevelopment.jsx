@@ -1,14 +1,9 @@
-import ServiceDetailPage from '../components/ServiceDetailPage.jsx';
+import StandaloneServicePage from '../components/StandaloneServicePage.jsx';
+import { getServicePageBySlug } from '../data/services.js';
 import mobileAppHero from '../assets/mobile-app-development-hero.svg';
 
 export default function MobileAppDevelopment() {
   return (
-    <ServiceDetailPage
-      slug="mobile-app-development"
-      heroImage={mobileAppHero}
-      eyebrow="Mobile"
-      introLabel="App Development"
-      introCopy="Launch mobile experiences that are fast, secure, and ready for real-world use."
-    />
+    <StandaloneServicePage service={getServicePageBySlug('mobile-app-development')} heroImage={mobileAppHero} />
   );
 }

@@ -1,14 +1,9 @@
-import ServiceDetailPage from '../components/ServiceDetailPage.jsx';
+import StandaloneServicePage from '../components/StandaloneServicePage.jsx';
+import { getServicePageBySlug } from '../data/services.js';
 import businessConsultancyHero from '../assets/business-consultancy-hero.svg';
 
 export default function BusinessConsultancy() {
   return (
-    <ServiceDetailPage
-      slug="business-consultancy"
-      heroImage={businessConsultancyHero}
-      eyebrow="Strategy"
-      introLabel="Business Advisory"
-      introCopy="Align operations, process, and growth goals with a practical consulting approach built for execution."
-    />
+    <StandaloneServicePage service={getServicePageBySlug('business-consultancy')} heroImage={businessConsultancyHero} />
   );
 }

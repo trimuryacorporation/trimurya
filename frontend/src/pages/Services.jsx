@@ -1,38 +1,18 @@
 import { useState, useEffect } from 'react';
 import SectionHeader from '../components/SectionHeader.jsx';
 import ServiceCard from '../components/ServiceCard.jsx';
-import { fetchPublished } from '../services/contentApi.js';
 import SeoHead from '../components/SeoHead.jsx';
 import { breadcrumbSchema, itemListSchema } from '../utils/seo.js';
-import { getFallbackServices } from '../data/serviceContent.js';
+import { SERVICE_PAGES } from '../data/services.js';
 
 export default function Services() {
-  const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
-  const fallbackServices = getFallbackServices();
 
   useEffect(() => {
-    let cancelled = false;
-
-    async function load() {
-      try {
-        const data = await fetchPublished('services').catch(() => []);
-        if (!cancelled) {
-          setServices(Array.isArray(data) && data.length > 0 ? data : fallbackServices);
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-
-    load();
-
-    return () => {
-      cancelled = true;
-    };
+    setLoading(false);
   }, []);
 
-  const visibleServices = services.length > 0 ? services : fallbackServices;
+  const visibleServices = SERVICE_PAGES;
 
   return (
     <>

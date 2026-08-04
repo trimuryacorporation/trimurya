@@ -49,11 +49,12 @@ export default function AppRoutes() {
       <Route element={<MainLayout />}>
         <Route index element={<Home />} />
         <Route path="about" element={<MongoPageRoute slug="about" fallback={<About />} />} />
-        <Route path="services" element={<MongoPageRoute slug="services" fallback={<Services />} />} />
+        <Route path="services" element={<Services />} />
         <Route path="services/ai-project-management" element={<AiProjectManagement />} />
         <Route path="services/website-development" element={<WebsiteDevelopment />} />
         <Route path="services/digital-marketing" element={<DigitalMarketing />} />
         <Route path="services/business-consultancy" element={<BusinessConsultancy />} />
+        <Route path="services/hr-consultancy" element={<HrConsultancy />} />
         <Route path="services/hr-and-recruitment-solutions" element={<HrConsultancy />} />
         <Route path="services/mobile-app-development" element={<MobileAppDevelopment />} />
         <Route path="services/cloud-solutions" element={<CloudSolutions />} />

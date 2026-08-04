@@ -1,14 +1,9 @@
-import ServiceDetailPage from '../components/ServiceDetailPage.jsx';
+import StandaloneServicePage from '../components/StandaloneServicePage.jsx';
+import { getServicePageBySlug } from '../data/services.js';
 import digitalMarketingHero from '../assets/digital-marketing-hero.svg';
 
 export default function DigitalMarketing() {
   return (
-    <ServiceDetailPage
-      slug="digital-marketing"
-      heroImage={digitalMarketingHero}
-      eyebrow="Growth"
-      introLabel="Digital Growth"
-      introCopy="Combine SEO, content, and performance marketing into one measurable growth engine."
-    />
+    <StandaloneServicePage service={getServicePageBySlug('digital-marketing')} heroImage={digitalMarketingHero} />
   );
 }

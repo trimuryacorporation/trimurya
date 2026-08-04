@@ -300,145 +300,6 @@ const pageSeeds = [
   }
 ];
 
-const serviceSeeds = [
-  {
-    title: 'AI Project Management',
-    slug: 'ai-project-management',
-    summary: 'Plan and deliver AI initiatives with clear milestones, governance, and measurable execution.',
-    longDescription: 'We help teams turn AI ideas into structured programs with realistic timelines, visible ownership, and delivery discipline.',
-    icon: 'FiCpu',
-    items: ['Roadmapping', 'Governance', 'Stakeholders', 'Delivery'],
-    features: [
-      'AI program planning and milestone setup',
-      'Delivery governance and accountability',
-      'Stakeholder communication and reporting',
-      'Risk tracking and dependency management'
-    ],
-    outcomes: ['Clear AI delivery roadmap', 'Better stakeholder alignment', 'Faster launch readiness', 'Lower delivery risk'],
-    technologies: ['AI Planning', 'Agile Delivery', 'Operations', 'Automation'],
-    related: ['website-development', 'cloud-solutions', 'cybersecurity']
-  },
-  {
-    title: 'Website Development',
-    slug: 'website-development',
-    summary: 'Build fast, conversion-focused websites that support credibility, SEO, and lead generation.',
-    longDescription: 'We design and develop modern websites that feel polished, load quickly, and give your business a strong digital presence.',
-    icon: 'FiGlobe',
-    items: ['UI/UX', 'Performance', 'SEO', 'Conversion'],
-    features: [
-      'Custom website design and development',
-      'Mobile-first responsive layouts',
-      'Technical SEO and structured metadata',
-      'Performance optimization and accessibility'
-    ],
-    outcomes: ['Stronger first impression', 'Better search visibility', 'Higher conversion quality', 'Improved page speed'],
-    technologies: ['React', 'Vite', 'SEO', 'Performance'],
-    related: ['digital-marketing', 'ai-project-management', 'cloud-solutions']
-  },
-  {
-    title: 'Digital Marketing',
-    slug: 'digital-marketing',
-    summary: 'Create measurable growth with SEO, content, paid media, and conversion-led campaign planning.',
-    longDescription: 'We unify SEO, content, and paid campaigns into one growth system so activity connects directly to traffic, leads, and revenue.',
-    icon: 'FiTrendingUp',
-    items: ['SEO', 'Content', 'Ads', 'Analytics'],
-    features: [
-      'SEO strategy and content planning',
-      'Paid media and campaign optimization',
-      'Analytics setup and conversion tracking',
-      'Landing pages designed for lead capture'
-    ],
-    outcomes: ['Improved organic visibility', 'More qualified inbound leads', 'Clear campaign reporting', 'Better conversion flow'],
-    technologies: ['SEO', 'Analytics', 'Paid Media', 'Content Strategy'],
-    related: ['website-development', 'business-consultancy', 'mobile-app-development']
-  },
-  {
-    title: 'Business Consultancy',
-    slug: 'business-consultancy',
-    summary: 'Turn strategy into execution with practical roadmaps, operating clarity, and transformation support.',
-    longDescription: 'We help leadership teams simplify decision-making, organize priorities, and move from strategy slides to operating reality.',
-    icon: 'FiBriefcase',
-    items: ['Strategy', 'Operations', 'Growth', 'Execution'],
-    features: [
-      'Business transformation roadmaps',
-      'Operating model and process mapping',
-      'KPI design and performance tracking',
-      'Leadership alignment and planning'
-    ],
-    outcomes: ['Clearer strategy execution', 'Reduced operational friction', 'Better owner alignment', 'Improved growth planning'],
-    technologies: ['Process Mapping', 'KPI Design', 'Change Management', 'Planning'],
-    related: ['ai-project-management', 'hr-consultancy', 'cloud-solutions']
-  },
-  {
-    title: 'HR Consultancy',
-    slug: 'hr-consultancy',
-    summary: 'Build hiring, onboarding, and people operations that support team growth and performance.',
-    longDescription: 'We help organizations improve hiring flow, workforce planning, and onboarding so teams can scale without losing clarity or culture.',
-    icon: 'FiUsers',
-    items: ['Hiring', 'Onboarding', 'Workforce', 'Culture'],
-    features: [
-      'Hiring workflow and role planning',
-      'Candidate screening and selection support',
-      'Onboarding and employee journey design',
-      'Workforce planning and role clarity'
-    ],
-    outcomes: ['Faster hiring cycles', 'Cleaner onboarding', 'Better team coordination', 'More scalable HR operations'],
-    technologies: ['Recruitment', 'HR Ops', 'Onboarding', 'Workforce Planning'],
-    related: ['business-consultancy', 'mobile-app-development', 'cybersecurity']
-  },
-  {
-    title: 'Mobile App Development',
-    slug: 'mobile-app-development',
-    summary: 'Design and ship mobile experiences that are fast, usable, and ready to support repeat engagement.',
-    longDescription: 'We create mobile experiences that feel native, support retention, and turn complex workflows into simple user journeys.',
-    icon: 'FiLayers',
-    items: ['UX', 'Prototype', 'Build', 'Launch'],
-    features: [
-      'Mobile app strategy and UX planning',
-      'Prototype and flow design',
-      'Cross-platform development support',
-      'Checkout, onboarding, and engagement features'
-    ],
-    outcomes: ['Better mobile engagement', 'Simpler user journeys', 'Higher conversion quality', 'Ready-for-launch builds'],
-    technologies: ['React Native', 'UX', 'Payments', 'Analytics'],
-    related: ['website-development', 'cloud-solutions', 'ai-project-management']
-  },
-  {
-    title: 'Cloud Solutions',
-    slug: 'cloud-solutions',
-    summary: 'Design cloud foundations that are scalable, resilient, and aligned with business operations.',
-    longDescription: 'We help organizations plan, migrate, and optimize cloud environments so they can improve reliability and support modern delivery.',
-    icon: 'FiCloud',
-    items: ['Migration', 'Architecture', 'Ops', 'Security'],
-    features: [
-      'Cloud architecture planning and assessment',
-      'Migration support and environment setup',
-      'Monitoring and reliability improvements',
-      'Security, access, and governance setup'
-    ],
-    outcomes: ['More resilient infrastructure', 'Simpler scaling and support', 'Better cloud governance', 'Improved platform efficiency'],
-    technologies: ['AWS', 'Cloud Architecture', 'DevOps', 'Security'],
-    related: ['cybersecurity', 'website-development', 'ai-project-management']
-  },
-  {
-    title: 'Cybersecurity',
-    slug: 'cybersecurity',
-    summary: 'Strengthen digital trust with practical security planning, monitoring, and risk reduction.',
-    longDescription: 'We help teams protect systems, reduce attack surface, and build a security posture that supports modern digital operations.',
-    icon: 'FiShield',
-    items: ['Risk', 'Access', 'Monitoring', 'Response'],
-    features: [
-      'Security review and risk assessment',
-      'Access control and policy recommendations',
-      'Monitoring and incident response planning',
-      'Cloud and application hardening support'
-    ],
-    outcomes: ['Reduced security risk', 'Stronger access control', 'Better incident readiness', 'Improved trust posture'],
-    technologies: ['Security', 'Monitoring', 'Governance', 'Cloud Hardening'],
-    related: ['cloud-solutions', 'website-development', 'business-consultancy']
-  }
-];
-
 const projectSeeds = [
   {
     title: 'AI Delivery Rollout',
@@ -626,16 +487,6 @@ const seedProjects = async () => {
   }
 };
 
-const seedServices = async () => {
-  for (const service of serviceSeeds) {
-    await GenericContent.findOneAndUpdate(
-      { type: 'services', slug: service.slug },
-      { ...service, type: 'services', status: 'published' },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
-    );
-  }
-};
-
 const runSeed = async () => {
   try {
     await connectDB();
@@ -645,7 +496,6 @@ const runSeed = async () => {
     for (const page of pageSeeds) {
       await seedPage(page);
     }
-    await seedServices();
     await seedProjects();
     console.log('Seeding completed.');
   } catch (error) {

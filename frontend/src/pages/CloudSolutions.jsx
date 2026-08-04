@@ -1,14 +1,9 @@
-import ServiceDetailPage from '../components/ServiceDetailPage.jsx';
+import StandaloneServicePage from '../components/StandaloneServicePage.jsx';
+import { getServicePageBySlug } from '../data/services.js';
 import cloudSolutionsHero from '../assets/cloud-solutions-hero.svg';
 
 export default function CloudSolutions() {
   return (
-    <ServiceDetailPage
-      slug="cloud-solutions"
-      heroImage={cloudSolutionsHero}
-      eyebrow="Cloud"
-      introLabel="Cloud Architecture"
-      introCopy="Build reliable, scalable cloud foundations with cost control, automation, and long-term maintainability."
-    />
+    <StandaloneServicePage service={getServicePageBySlug('cloud-solutions')} heroImage={cloudSolutionsHero} />
   );
 }
