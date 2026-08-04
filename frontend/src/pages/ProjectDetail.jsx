@@ -1,9 +1,11 @@
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiArrowLeft, FiCalendar, FiClock, FiUsers, FiExternalLink } from 'react-icons/fi';
 import SectionHeader from '../components/SectionHeader.jsx';
 import Button from '../components/Button.jsx';
-import { fetchPublished, fetchPublishedBySlug } from '../services/contentApi.js';
+import { fetchPublishedBySlug } from '../services/contentApi.js';
+import { FALLBACK_PROJECTS, normalizeProject } from '../data/projectContent.js';
 
 export default function ProjectDetail() {
   const { slug } = useParams();
@@ -15,15 +17,22 @@ export default function ProjectDetail() {
     let cancelled = false;
     fetchPublishedBySlug('projects', slug).then((data) => {
       if (cancelled) return;
-      setProject(data);
-      if (data?.related?.length) {
-        Promise.all(data.related.map((rSlug) => fetchPublishedBySlug('projects', rSlug)))
+      const normalized = data ? normalizeProject(data) : FALLBACK_PROJECTS.find((item) => item.slug === slug) || null;
+      setProject(normalized);
+      if (normalized?.related?.length) {
+        Promise.all(normalized.related.map((rSlug) => fetchPublishedBySlug('projects', rSlug)))
           .then((results) => {
             if (!cancelled) setRelated(results.filter(Boolean));
           });
       }
       setLoading(false);
-    }).catch(() => setLoading(false));
+    }).catch(() => {
+      if (!cancelled) {
+        const fallbackProject = FALLBACK_PROJECTS.find((item) => item.slug === slug) || null;
+        setProject(fallbackProject ? normalizeProject(fallbackProject) : null);
+        setLoading(false);
+      }
+    });
     return () => { cancelled = true; };
   }, [slug]);
 
@@ -49,6 +58,9 @@ export default function ProjectDetail() {
   }
 
   const gradientClass = 'from-secondary/80 to-accent/80';
+  const tech = Array.isArray(project.tech) ? project.tech : [];
+  const metrics = Array.isArray(project.metrics) ? project.metrics : [];
+  const results = project.results;
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-20 lg:px-8">
@@ -74,7 +86,7 @@ export default function ProjectDetail() {
       </div>
 
       <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4" data-aos="fade-up">
-        {project.metrics?.map((m, i) => (
+        {metrics.map((m, i) => (
           <div key={i} className="rounded-[24px] border border-slate-200 bg-white p-6 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <p className="text-3xl font-black text-secondary">{m.value}</p>
             <p className="mt-1 text-xs font-medium text-slate-500 dark:text-slate-400">{m.label}</p>
@@ -96,7 +108,7 @@ export default function ProjectDetail() {
 
           <div className="rounded-[28px] border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <h3 className="text-lg font-black text-primary dark:text-white">The Results</h3>
-            <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">{project.results}</p>
+            <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">{results}</p>
           </div>
         </div>
 
@@ -130,9 +142,9 @@ export default function ProjectDetail() {
           <div className="rounded-[28px] border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <h3 className="text-lg font-black text-primary dark:text-white mb-4">Tech Stack</h3>
             <div className="flex flex-wrap gap-2">
-              {Array.isArray(project.tech) ? project.tech.map((t) => (
+              {tech.map((t) => (
                 <span key={t} className="rounded-full bg-secondary/10 px-3 py-1.5 text-xs font-bold text-secondary dark:bg-secondary/20">{t}</span>
-              )) : null}
+              ))}
             </div>
           </div>
 

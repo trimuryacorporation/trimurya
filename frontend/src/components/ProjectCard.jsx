@@ -4,6 +4,8 @@ import { FiArrowUpRight, FiCalendar, FiUsers, FiClock } from 'react-icons/fi';
 
 export default function ProjectCard({ project, index = 0 }) {
   const gradientClass = 'from-secondary/80 to-accent/80';
+  const tech = Array.isArray(project.tech) ? project.tech : [];
+  const metrics = Array.isArray(project.metrics) ? project.metrics : [];
 
   return (
     <motion.article
@@ -31,7 +33,7 @@ export default function ProjectCard({ project, index = 0 }) {
 
       <div className="p-7">
         <div className="flex flex-wrap gap-2 mb-3">
-          {project.tech.slice(0, 4).map((t) => (
+          {tech.slice(0, 4).map((t) => (
             <span key={t} className="rounded-full bg-slate-100 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:bg-slate-800 dark:text-slate-300">{t}</span>
           ))}
         </div>
@@ -45,9 +47,9 @@ export default function ProjectCard({ project, index = 0 }) {
           <span className="inline-flex items-center gap-1.5"><FiUsers size={14} /> {project.teamSize} Members</span>
         </div>
 
-        {project.metrics && (
+        {metrics.length > 0 && (
           <div className="mt-5 rounded-xl bg-secondary/10 px-4 py-3 dark:bg-secondary/20">
-            <p className="text-sm font-black text-secondary">{project.metrics[0].value} {project.metrics[0].label}</p>
+            <p className="text-sm font-black text-secondary">{metrics[0].value} {metrics[0].label}</p>
           </div>
         )}
       </div>

@@ -7,6 +7,7 @@ import FilterBar from '../components/FilterBar.jsx';
 import ProjectCard from '../components/ProjectCard.jsx';
 import { fetchPublished } from '../services/contentApi.js';
 import { itemListSchema, breadcrumbSchema } from '../utils/seo.js';
+import { FALLBACK_PROJECTS, normalizeProject } from '../data/projectContent.js';
 
 export default function Projects() {
   const [search, setSearch] = useState('');
@@ -17,10 +18,24 @@ export default function Projects() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchPublished('projects').then((data) => {
-      setProjects(data);
-      setLoading(false);
-    });
+    let cancelled = false;
+
+    fetchPublished('projects')
+      .then((data) => {
+        if (cancelled) return;
+        const normalized = Array.isArray(data) ? data.map(normalizeProject) : [];
+        setProjects(normalized.length > 0 ? normalized : FALLBACK_PROJECTS.map(normalizeProject));
+      })
+      .catch(() => {
+        if (!cancelled) setProjects(FALLBACK_PROJECTS.map(normalizeProject));
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const projectTypes = useMemo(() => [...new Set(projects.map((p) => p.type).filter(Boolean))], [projects]);
