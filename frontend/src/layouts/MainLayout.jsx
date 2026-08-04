@@ -6,8 +6,8 @@ import Button from '../components/Button.jsx';
 
 import TextLogo from '../components/TextLogo.jsx';
 import Footer from '../components/Footer.jsx';
-import { setPageSeo } from '../utils/seo.js';
 import { fetchPublished } from '../services/contentApi.js';
+import SeoHead from '../components/SeoHead.jsx';
 
 const iconNameMap = {
   'Services': 'FiLayers',
@@ -132,10 +132,6 @@ export default function MainLayout() {
   const toggleDropdown = (label) => setOpenDropdown((current) => (current === label ? null : label));
 
   useEffect(() => {
-    setPageSeo(location.pathname);
-  }, [location.pathname]);
-
-  useEffect(() => {
     if (location.hash) {
       const id = location.hash.replace('#', '');
       const el = document.getElementById(id);
@@ -179,6 +175,7 @@ export default function MainLayout() {
 
   return (
     <div className="min-h-screen bg-surface text-primary dark:bg-slate-950 dark:text-white">
+      <SeoHead pathname={location.pathname} />
       <header className={`sticky top-0 z-40 border-b border-slate-200/70 bg-white/85 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-950/85 transition-transform duration-300 ${headerVisible ? 'translate-y-0' : '-translate-y-full'}`}>
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-4 py-3 lg:px-8">
           <TextLogo compact />

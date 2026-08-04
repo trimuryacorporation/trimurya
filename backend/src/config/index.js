@@ -48,12 +48,12 @@ export const AppConfig = {
       'team', 'blogs', 'jobs', 'applications', 'resumes',
       'testimonials', 'gallery', 'newsletter', 'appointments',
       'meetings', 'tickets', 'notifications', 'seo', 'settings',
-      'analytics', 'activity-logs', 'stats', 'values', 'nav-links',
+      'analytics', 'activity-logs', 'stats', 'values', 'nav-links', 'pages',
       'videos', 'hero-slides', 'case_studies', 'press-releases'
     ],
     dashboardSummaryTypes: process.env.DASHBOARD_SUMMARY_TYPES ? process.env.DASHBOARD_SUMMARY_TYPES.split(',').filter(Boolean) : [
       'projects', 'services', 'blogs', 'industries', 'case_studies',
-      'testimonials', 'team', 'clients', 'press-releases', 'values', 'stats'
+      'testimonials', 'team', 'clients', 'press-releases', 'values', 'stats', 'pages'
     ],
     applicationStatuses: (process.env.APPLICATION_STATUSES || 'new,reviewed,shortlisted,rejected,hired').split(',').filter(Boolean),
     contactStatuses: (process.env.CONTACT_STATUSES || 'new,contacted,closed').split(',').filter(Boolean),

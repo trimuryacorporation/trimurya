@@ -29,7 +29,12 @@ export async function deleteSetting(key) {
 
 export async function fetchSiteSettings() {
   try {
-    const settings = await fetchSettings('site');
+    const [siteSettings, contactSettings, socialSettings] = await Promise.all([
+      fetchSettings('site'),
+      fetchSettings('contact'),
+      fetchSettings('social')
+    ]);
+    const settings = { ...siteSettings, ...contactSettings, ...socialSettings };
     return {
       siteName: settings.siteName || 'Trimurya Corporation',
       siteUrl: settings.siteUrl || 'https://www.trimuryacorporation.in',

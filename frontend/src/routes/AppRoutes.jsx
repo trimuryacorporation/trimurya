@@ -41,14 +41,15 @@ import AdminContentManager from '../admin/pages/AdminContentManager.jsx';
 import AdminUsers from '../admin/pages/AdminUsers.jsx';
 import AdminSettings from '../admin/pages/AdminSettings.jsx';
 import AdminApplications from '../admin/pages/AdminApplications.jsx';
+import MongoPageRoute from '../components/MongoPageRoute.jsx';
 
 export default function AppRoutes() {
   return (
     <Routes>
       <Route element={<MainLayout />}>
         <Route index element={<Home />} />
-        <Route path="about" element={<About />} />
-        <Route path="services" element={<Services />} />
+        <Route path="about" element={<MongoPageRoute slug="about" fallback={<About />} />} />
+        <Route path="services" element={<MongoPageRoute slug="services" fallback={<Services />} />} />
         <Route path="services/ai-project-management" element={<AiProjectManagement />} />
         <Route path="services/website-development" element={<WebsiteDevelopment />} />
         <Route path="services/digital-marketing" element={<DigitalMarketing />} />
@@ -58,32 +59,32 @@ export default function AppRoutes() {
         <Route path="services/cloud-solutions" element={<CloudSolutions />} />
         <Route path="services/cybersecurity" element={<Cybersecurity />} />
         <Route path="services/cybersecurity-services" element={<Cybersecurity />} />
-        <Route path="industries" element={<Industries />} />
-        <Route path="projects" element={<Projects />} />
+        <Route path="industries" element={<MongoPageRoute slug="industries" fallback={<Industries />} />} />
+        <Route path="projects" element={<MongoPageRoute slug="projects" fallback={<Projects />} />} />
         <Route path="projects/:slug" element={<ProjectDetail />} />
-        <Route path="case_studies" element={<CaseStudies />} />
+        <Route path="case_studies" element={<MongoPageRoute slug="case_studies" fallback={<CaseStudies />} />} />
         <Route path="case_studies/:slug" element={<CaseStudyDetail />} />
-        <Route path="marketplace" element={<Marketplace />} />
-        <Route path="careers" element={<Careers />} />
-        <Route path="careers/process" element={<CareersProcess />} />
-        <Route path="careers/open-positions" element={<OpenPositions />} />
+        <Route path="marketplace" element={<MongoPageRoute slug="marketplace" fallback={<Marketplace />} />} />
+        <Route path="careers" element={<MongoPageRoute slug="careers" fallback={<Careers />} />} />
+        <Route path="careers/process" element={<MongoPageRoute slug="careers/process" fallback={<CareersProcess />} />} />
+        <Route path="careers/open-positions" element={<MongoPageRoute slug="careers/open-positions" fallback={<OpenPositions />} />} />
         <Route path="careers/jobs/:slug" element={<JobDetail />} />
-        <Route path="blog" element={<Blog />} />
-        <Route path="contact" element={<Contact />} />
-        <Route path="partner_with_us" element={<PartnerWithUs />} />
-        <Route path="partner_with_us/models" element={<PartnerModels />} />
-        <Route path="partner_with_us/process" element={<PartnerWithUsProcess />} />
-        <Route path="request_quote" element={<RequestQuote />} />
-        <Route path="Schedule_Call" element={<ScheduleCall />} />
-        <Route path="Client_Support" element={<ClientSupport />} />
-        <Route path="Client_Support/contact" element={<ClientSupport />} />
-        <Route path="Client_Support/faq" element={<ClientSupport />} />
-        <Route path="Press_Media" element={<PressMedia />} />
-        <Route path="Press_Media/releases" element={<PressMedia />} />
-        <Route path="Press_Media/media-kit" element={<PressMedia />} />
+        <Route path="blog" element={<MongoPageRoute slug="blog" fallback={<Blog />} />} />
+        <Route path="contact" element={<MongoPageRoute slug="contact" fallback={<Contact />} />} />
+        <Route path="partner_with_us" element={<MongoPageRoute slug="partner_with_us" fallback={<PartnerWithUs />} />} />
+        <Route path="partner_with_us/models" element={<MongoPageRoute slug="partner_with_us/models" fallback={<PartnerModels />} />} />
+        <Route path="partner_with_us/process" element={<MongoPageRoute slug="partner_with_us/process" fallback={<PartnerWithUsProcess />} />} />
+        <Route path="request_quote" element={<MongoPageRoute slug="request_quote" fallback={<RequestQuote />} />} />
+        <Route path="Schedule_Call" element={<MongoPageRoute slug="Schedule_Call" fallback={<ScheduleCall />} />} />
+        <Route path="Client_Support" element={<MongoPageRoute slug="Client_Support" fallback={<ClientSupport />} />} />
+        <Route path="Client_Support/contact" element={<MongoPageRoute slug="Client_Support/contact" fallback={<ClientSupport />} />} />
+        <Route path="Client_Support/faq" element={<MongoPageRoute slug="Client_Support/faq" fallback={<ClientSupport />} />} />
+        <Route path="Press_Media" element={<MongoPageRoute slug="Press_Media" fallback={<PressMedia />} />} />
+        <Route path="Press_Media/releases" element={<MongoPageRoute slug="Press_Media/releases" fallback={<PressMedia />} />} />
+        <Route path="Press_Media/media-kit" element={<MongoPageRoute slug="Press_Media/media-kit" fallback={<PressMedia />} />} />
         <Route path="login" element={<Auth />} />
         <Route path="dashboard" element={<Dashboard />} />
-        <Route path="privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="privacy-policy" element={<MongoPageRoute slug="privacy-policy" fallback={<PrivacyPolicy />} />} />
         <Route path="*" element={<NotFound />} />
       </Route>
 

@@ -32,7 +32,7 @@ export default function ServiceCard({ service, index = 0 }) {
         <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">{service.summary}</p>
 
         <div className="mt-6 flex flex-wrap gap-2">
-          {service.items.slice(0, 6).map((item) => (
+          {(service.items || []).slice(0, 6).map((item) => (
             <span key={item} className="rounded-full bg-slate-100 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 transition-colors duration-300 group-hover:bg-secondary/10 group-hover:text-secondary dark:bg-slate-800 dark:text-slate-300 dark:group-hover:bg-secondary/20 dark:group-hover:text-secondary">{item}</span>
           ))}
         </div>

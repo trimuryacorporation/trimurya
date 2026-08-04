@@ -10,6 +10,10 @@ export async function fetchPublishedBySlug(type, slug) {
   return data.data?.[0] || null;
 }
 
+export async function fetchPageBySlug(slug) {
+  return fetchPublishedBySlug('pages', slug);
+}
+
 export async function fetchAdminList(type) {
   const { data } = await api.get(`/${type}`);
   return data.data || [];

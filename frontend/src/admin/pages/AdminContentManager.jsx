@@ -217,6 +217,22 @@ const TYPE_CONFIG = {
       { key: 'featured', label: 'Featured', type: 'select', options: ['true', 'false'] },
       { key: 'status', label: 'Status', type: 'select', options: ['published', 'draft', 'archived'] },
     ]
+  },
+  pages: {
+    label: 'Pages',
+    icon: FiLayers,
+    fields: [
+      { key: 'title', label: 'Title', type: 'text' },
+      { key: 'slug', label: 'Slug', type: 'text' },
+      { key: 'template', label: 'Template', type: 'text' },
+      { key: 'summary', label: 'Summary', type: 'textarea' },
+      { key: 'heroImage', label: 'Hero Image URL', type: 'text' },
+      { key: 'seoTitle', label: 'SEO Title', type: 'text' },
+      { key: 'seoDescription', label: 'SEO Description', type: 'textarea' },
+      { key: 'seoKeywords', label: 'SEO Keywords', type: 'textarea' },
+      { key: 'sections', label: 'Sections (JSON)', type: 'json' },
+      { key: 'status', label: 'Status', type: 'select', options: ['published', 'draft', 'archived'] },
+    ]
   }
 };
 
@@ -227,6 +243,48 @@ function parseJsonField(value, fallback = {}) {
   } catch {
     return fallback;
   }
+}
+
+function isCommaSeparatedField(field) {
+  return field.type === 'textarea' && /comma separated|array/i.test(field.label);
+}
+
+function formatFieldForEdit(field, value) {
+  if (field.type === 'json') {
+    return typeof value === 'string' ? value : JSON.stringify(value || {}, null, 2);
+  }
+
+  if (Array.isArray(value)) {
+    return isCommaSeparatedField(field) ? value.join(', ') : JSON.stringify(value, null, 2);
+  }
+
+  if (value && typeof value === 'object') {
+    return JSON.stringify(value, null, 2);
+  }
+
+  return value || '';
+}
+
+function normalizeFieldForSave(field, value) {
+  if (value === '') return undefined;
+
+  if (field.type === 'json') {
+    if (typeof value !== 'string') return value;
+    try {
+      return JSON.parse(value);
+    } catch {
+      return undefined;
+    }
+  }
+
+  if (isCommaSeparatedField(field) && typeof value === 'string') {
+    return value
+      .split(',')
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+
+  return value;
 }
 
 function FormField({ field, value, onChange }) {
@@ -348,6 +406,14 @@ export default function AdminContentManager() {
       base.location = item.location || '';
       base.description = item.description || '';
     }
+    if (type === 'pages') {
+      base.template = item.template || '';
+      base.heroImage = item.heroImage || '';
+      base.seoTitle = item.seoTitle || '';
+      base.seoDescription = item.seoDescription || '';
+      base.seoKeywords = item.seoKeywords || '';
+      base.sections = formatFieldForEdit({ type: 'json' }, item.sections || item.metadata?.sections || []);
+    }
     setForm(base);
     setError('');
     setModalOpen(true);
@@ -360,6 +426,12 @@ export default function AdminContentManager() {
 
     try {
       const payload = { ...form };
+
+      config.fields.forEach((field) => {
+        if (Object.prototype.hasOwnProperty.call(payload, field.key)) {
+          payload[field.key] = normalizeFieldForSave(field, payload[field.key]);
+        }
+      });
 
       Object.keys(payload).forEach((key) => {
         if (payload[key] === '') payload[key] = undefined;

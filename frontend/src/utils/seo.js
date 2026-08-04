@@ -72,17 +72,24 @@ function normalizePath(pathname = '/') {
   return trimmed === '' ? '/' : trimmed;
 }
 
-function getRouteMetadata(pathname = '/') {
+function humanizeSegment(segment) {
+  return segment
+    .split(/[-_]/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+}
+
+function buildFallbackMetadata(pathname) {
   const normalizedPath = normalizePath(pathname);
-  const serviceMatch = normalizedPath.match(/^\/services\/([^/]+)$/);
+  const segments = normalizedPath.split('/').filter(Boolean);
 
-  if (serviceMatch) {
-    const serviceLabel = serviceMatch[1]
-      .split('-')
-      .filter(Boolean)
-      .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
-      .join(' ');
+  if (segments.length === 0) {
+    return ROUTE_METADATA['/'];
+  }
 
+  if (segments[0] === 'services' && segments[1]) {
+    const serviceLabel = humanizeSegment(segments[1]);
     return {
       title: `${serviceLabel} Services`,
       description: `Explore ${serviceLabel} services from Trimurya Corporation for modern business growth and digital transformation.`,
@@ -90,7 +97,17 @@ function getRouteMetadata(pathname = '/') {
     };
   }
 
-  return ROUTE_METADATA[normalizedPath] || ROUTE_METADATA['/'];
+  const title = humanizeSegment(segments[segments.length - 1]);
+  return {
+    title,
+    description: `${title} information and resources from Trimurya Corporation.`,
+    keywords: `${title}, Trimurya Corporation`
+  };
+}
+
+function getRouteMetadata(pathname = '/') {
+  const normalizedPath = normalizePath(pathname);
+  return ROUTE_METADATA[normalizedPath] || buildFallbackMetadata(normalizedPath);
 }
 
 function upsertMetaTag(attributes, content) {
@@ -127,8 +144,8 @@ function upsertLinkTag(attributes) {
   return tag;
 }
 
-export function pageTitle(title) {
-  return `${title} | ${DEFAULT_TITLE}`;
+export function pageTitle(title, siteName = DEFAULT_TITLE) {
+  return `${title} | ${siteName}`;
 }
 
 export function organizationSchema() {
@@ -281,14 +298,32 @@ export function localBusinessSchema() {
   };
 }
 
-export function buildPageMetadata(pathname = '/') {
+export function serviceSchema(service) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: service.title,
+    description: service.longDescription || service.summary || service.description || '',
+    provider: {
+      '@type': 'Organization',
+      name: 'Trimurya Corporation',
+      url: SITE_URL
+    },
+    areaServed: service.areaServed || ['India', 'Global']
+  };
+}
+
+export function buildPageMetadata(pathname = '/', overrides = {}) {
   const routeMeta = getRouteMetadata(pathname);
+  const siteTitle = overrides.siteTitle || DEFAULT_TITLE;
+  const siteUrl = overrides.siteUrl || SITE_URL;
   const normalizedPath = normalizePath(pathname);
   const canonicalPath = normalizedPath === '/' ? '/' : normalizedPath;
-  const canonical = `${SITE_URL}${canonicalPath}`;
-  const title = pageTitle(routeMeta.title);
-  const description = routeMeta.description || DEFAULT_DESCRIPTION;
-  const keywords = routeMeta.keywords || DEFAULT_KEYWORDS;
+  const canonical = overrides.canonical || `${siteUrl}${canonicalPath}`;
+  const titleBase = overrides.title || routeMeta.title;
+  const title = pageTitle(titleBase, siteTitle);
+  const description = overrides.description || routeMeta.description || DEFAULT_DESCRIPTION;
+  const keywords = overrides.keywords || routeMeta.keywords || DEFAULT_KEYWORDS;
 
   return {
     title,
@@ -297,16 +332,19 @@ export function buildPageMetadata(pathname = '/') {
     canonical,
     ogTitle: title,
     ogDescription: description,
-    ogUrl: canonical
+    ogUrl: canonical,
+    image: overrides.image || `${siteUrl}/og-image.svg`,
+    siteTitle,
+    siteUrl
   };
 }
 
-export function setPageSeo(pathname = '/') {
+export function setPageSeo(pathname = '/', overrides = {}) {
   if (typeof window === 'undefined' || typeof document === 'undefined') {
     return;
   }
 
-  const meta = buildPageMetadata(pathname);
+  const meta = buildPageMetadata(pathname, overrides);
   document.title = meta.title;
 
   upsertMetaTag({ name: 'description' }, meta.description);
@@ -321,8 +359,8 @@ export function setPageSeo(pathname = '/') {
   upsertMetaTag({ property: 'og:description' }, meta.ogDescription);
   upsertMetaTag({ property: 'og:type' }, 'website');
   upsertMetaTag({ property: 'og:url' }, meta.ogUrl);
-  upsertMetaTag({ property: 'og:image' }, `${SITE_URL}/og-image.svg`);
-  upsertMetaTag({ property: 'og:site_name' }, DEFAULT_TITLE);
+  upsertMetaTag({ property: 'og:image' }, meta.image);
+  upsertMetaTag({ property: 'og:site_name' }, meta.siteTitle);
   upsertMetaTag({ property: 'og:locale' }, 'en_US');
 
   upsertLinkTag({ rel: 'canonical', href: meta.canonical });
