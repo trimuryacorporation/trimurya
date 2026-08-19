@@ -39,10 +39,10 @@ export async function fetchSiteSettings() {
     return {
       siteName: settings.siteName || 'Trimurya Corporation',
       siteUrl: settings.siteUrl || 'https://www.trimuryacorporation.in',
-      siteDescription: settings.siteDescription || '',
-      contactEmail: settings.contactEmail || '',
-      contactPhone: settings.contactPhone || '',
-      address: settings.address || '',
+      siteDescription: settings.siteDescription || 'Trimurya Corporation delivers enterprise AI, technology, recruitment, HR, digital marketing, telecom, call center, and media solutions for business growth.',
+      contactEmail: settings.contactEmail || 'collab@trimuryacorporation.in',
+      contactPhone: settings.contactPhone || '+91 00000 00000',
+      address: settings.address || 'India',
       social: {
         linkedin: settings.linkedin || DEFAULT_SOCIAL_LINKS.linkedin,
         twitter: settings.twitter || '',
@@ -59,10 +59,10 @@ export async function fetchSiteSettings() {
     return {
       siteName: 'Trimurya Corporation',
       siteUrl: 'https://www.trimuryacorporation.in',
-      siteDescription: '',
-      contactEmail: '',
-      contactPhone: '',
-      address: '',
+      siteDescription: 'Trimurya Corporation delivers enterprise AI, technology, recruitment, HR, digital marketing, telecom, call center, and media solutions for business growth.',
+      contactEmail: 'collab@trimuryacorporation.in',
+      contactPhone: '+91 00000 00000',
+      address: 'India',
       social: DEFAULT_SOCIAL_LINKS,
       seo: { title: 'Trimurya Corporation', description: '', keywords: '' }
     };

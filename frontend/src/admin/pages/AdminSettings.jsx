@@ -7,10 +7,10 @@ import { DEFAULT_SOCIAL_LINKS } from '../../utils/seo.js';
 const defaultState = {
   siteName: 'Trimurya Corporation',
   siteUrl: 'https://www.trimuryacorporation.in',
-  siteDescription: '',
-  contactEmail: '',
-  contactPhone: '',
-  address: '',
+  siteDescription: 'Trimurya Corporation delivers enterprise AI, technology, recruitment, HR, digital marketing, telecom, call center, and media solutions for business growth.',
+  contactEmail: 'collab@trimuryacorporation.in',
+  contactPhone: '+91 00000 00000',
+  address: 'India',
   social: { ...DEFAULT_SOCIAL_LINKS, twitter: '', facebook: '' }
 };
 
