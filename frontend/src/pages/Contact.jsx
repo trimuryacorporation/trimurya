@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { FiArrowRight, FiCalendar, FiClock, FiMail, FiMapPin, FiPhone, FiVideo } from 'react-icons/fi';
-import { localBusinessSchema, breadcrumbSchema } from '../utils/seo.js';
+import SeoHead from '../components/SeoHead.jsx';
+import { DEFAULT_KEYWORDS, localBusinessSchema, breadcrumbSchema } from '../utils/seo.js';
 
 
 const timeSlots = [
@@ -52,17 +52,17 @@ export default function Contact() {
 
   return (
     <>
-      <Helmet>
-        <title>Contact Us | Trimurya Corporation</title>
-        <meta name="description" content="Contact Trimurya Corporation to discuss AI, technology, recruitment, digital marketing, telecom, and media needs." />
-        <meta name="keywords" content="contact Trimurya Corporation, business enquiry, AI consultation, recruitment enquiry" />
-        <link rel="canonical" href="https://www.trimuryacorporation.in/contact" />
-        <script type="application/ld+json">{JSON.stringify(localBusinessSchema())}</script>
-        <script type="application/ld+json">{JSON.stringify(breadcrumbSchema([
+      <SeoHead
+        pathname="/contact"
+        title="Contact Us"
+        description="Contact Trimurya Corporation for AI services, AI data collection, data annotation, model training support, website development, SaaS, and mobile apps."
+        keywords={`contact Trimurya Corporation, business enquiry, AI consultation, website development enquiry, ${DEFAULT_KEYWORDS}`}
+        schemas={[localBusinessSchema()]}
+        breadcrumbs={[
           { name: 'Home', url: 'https://www.trimuryacorporation.in/' },
           { name: 'Contact Us', url: 'https://www.trimuryacorporation.in/contact' }
-        ]))}</script>
-      </Helmet>
+        ]}
+      />
       <div className="bg-slate-50 dark:bg-slate-950">
 
 

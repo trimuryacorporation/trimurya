@@ -1,5 +1,6 @@
 import api from './api.js';
 import config from '../config/index.js';
+import { DEFAULT_SOCIAL_LINKS } from '../utils/seo.js';
 
 export async function fetchSettings(category = null) {
   const params = category ? { category } : {};
@@ -43,10 +44,10 @@ export async function fetchSiteSettings() {
       contactPhone: settings.contactPhone || '',
       address: settings.address || '',
       social: {
-        linkedin: settings.linkedin || '',
+        linkedin: settings.linkedin || DEFAULT_SOCIAL_LINKS.linkedin,
         twitter: settings.twitter || '',
         facebook: settings.facebook || '',
-        instagram: settings.instagram || ''
+        instagram: settings.instagram || DEFAULT_SOCIAL_LINKS.instagram
       },
       seo: {
         title: settings.seoTitle || settings.siteName || 'Trimurya Corporation',
@@ -62,7 +63,7 @@ export async function fetchSiteSettings() {
       contactEmail: '',
       contactPhone: '',
       address: '',
-      social: {},
+      social: DEFAULT_SOCIAL_LINKS,
       seo: { title: 'Trimurya Corporation', description: '', keywords: '' }
     };
   }

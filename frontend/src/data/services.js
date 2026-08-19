@@ -4,8 +4,8 @@ export const SERVICE_PAGES = [
     title: 'AI Project Management',
     label: 'AI Delivery',
     icon: 'FiCpu',
-    summary: 'Keep AI initiatives organized with clear milestones, governance, and delivery ownership.',
-    intro: 'Turn AI ideas into structured programs with visible progress, aligned stakeholders, and execution you can trust.',
+    summary: 'Plan AI data collection, annotation, model training support, and automation with clear governance and delivery ownership.',
+    intro: 'Turn AI services, AI data work, and automation ideas into structured programs with visible progress, aligned stakeholders, and execution you can trust.',
     heroImage: '/hero-images/ai-project-management.svg',
     variant: 'split-dark',
     accent: 'from-blue-950 via-primary to-slate-900',
@@ -31,15 +31,16 @@ export const SERVICE_PAGES = [
       { step: '04', title: 'Improve', copy: 'We refine the program after launch and keep momentum moving forward.' }
     ],
     cta: 'Start your AI program with structure and confidence.',
-    seoDescription: 'Plan and deliver AI projects with visibility, governance, and practical execution.'
+    seoDescription: 'AI services company in India for AI data collection, data annotation, model training support, AI automation, governance, and delivery execution.',
+    seoKeywords: 'Trimurya Corporation AI, Trimurya Corporation AI services, AI services company, AI solutions company India, AI data collection, AI data annotation, data annotation services India, AI data services India, AI model training support, AI automation services'
   },
   {
     slug: 'website-development',
     title: 'Website Development',
     label: 'Web Experience',
     icon: 'FiGlobe',
-    summary: 'Build fast, conversion-focused websites with strong SEO foundations and polished design.',
-    intro: 'Create a website that feels premium, loads quickly, and supports trust, leads, and search visibility.',
+    summary: 'Build fast website design, custom website development, and web application experiences with strong SEO foundations.',
+    intro: 'Create a website or web application that feels premium, loads quickly, and supports trust, leads, and search visibility.',
     heroImage: '/hero-images/website-development.svg',
     variant: 'split-light',
     accent: 'from-slate-100 via-white to-blue-50',
@@ -65,7 +66,8 @@ export const SERVICE_PAGES = [
       { step: '04', title: 'Launch', copy: 'We test, polish, and ship with tracking and support ready to go.' }
     ],
     cta: 'Launch a website that looks great and performs.',
-    seoDescription: 'Website development services built for speed, SEO, and conversions.'
+    seoDescription: 'Website design company India offering website development, custom website development, web application development, SEO structure, and conversion-ready builds.',
+    seoKeywords: 'Trimurya Corporation website design, website design company India, website development company India, custom website development, web application development, software development company India'
   },
   {
     slug: 'digital-marketing',
@@ -201,7 +203,8 @@ export const SERVICE_PAGES = [
       { step: '04', title: 'Launch', copy: 'We test and release with a plan for iteration.' }
     ],
     cta: 'Create an app experience users return to.',
-    seoDescription: 'Mobile app development services for product design, development, and release.'
+    seoDescription: 'Mobile app development company for product design, cross-platform applications, SaaS development, software development, testing, and release support.',
+    seoKeywords: 'mobile app development company, SaaS development company, software development company India, custom software development, web application development, Trimurya Corporation software development'
   },
   {
     slug: 'cloud-solutions',

@@ -1,38 +1,78 @@
-const SITE_URL = 'https://www.trimuryacorporation.in';
-const DEFAULT_TITLE = 'Trimurya Corporation';
-const DEFAULT_DESCRIPTION = 'Trimurya Corporation delivers enterprise AI, technology, recruitment, HR, digital marketing, telecom, call center, and media solutions for business growth.';
-const DEFAULT_KEYWORDS = 'Trimurya Corporation, AI services, technology solutions, recruitment, HR services, digital marketing, telecom, call center, media services';
+export const SITE_URL = 'https://www.trimuryacorporation.in';
+export const DEFAULT_TITLE = 'Trimurya Corporation';
+
+export const DEFAULT_SOCIAL_LINKS = {
+  linkedin: 'https://www.linkedin.com/company/trimuryacorporation/',
+  instagram: 'https://www.instagram.com/trimuryacorporation/'
+};
+
+export const SOCIAL_PROFILE_URLS = Object.values(DEFAULT_SOCIAL_LINKS);
+
+export const BRAND_ALIASES = [
+  'Trimurya Corporation India',
+  'Trimurya Corporation AI',
+  'trimuryacorporation'
+];
+
+export const CORE_SERVICE_KEYWORDS = [
+  'AI services company',
+  'AI solutions company India',
+  'AI data collection',
+  'AI data annotation',
+  'AI model training support',
+  'AI automation services',
+  'data annotation services India',
+  'AI data services India',
+  'website design company India',
+  'website development company India',
+  'custom website development',
+  'web application development',
+  'software development company India',
+  'SaaS development company',
+  'mobile app development company'
+];
+
+export const DEFAULT_DESCRIPTION = 'Trimurya Corporation India delivers AI data collection, data annotation, AI automation, model training support, software, SaaS, website and mobile app development.';
+export const DEFAULT_KEYWORDS = [
+  'Trimurya Corporation',
+  'Trimurya Corporation India',
+  'Trimurya Corporation AI',
+  'Trimurya Corporation website design',
+  'Trimurya Corporation AI services',
+  'Trimurya Corporation software development',
+  ...CORE_SERVICE_KEYWORDS
+].join(', ');
 
 const ROUTE_METADATA = {
   '/': {
-    title: 'AI, Technology & Talent Solutions',
-    description: 'Trimurya Corporation helps businesses scale with AI, technology, recruitment, HR, digital marketing, telecom, call center, and media services.',
+    title: 'AI Services & Software Development Company India',
+    description: DEFAULT_DESCRIPTION,
     keywords: DEFAULT_KEYWORDS
   },
   '/about': {
     title: 'About Trimurya Corporation',
-    description: 'Learn about Trimurya Corporation and our mission to empower businesses through innovation, technology, and talent.',
-    keywords: 'about Trimurya Corporation, AI company, technology services, business transformation'
+    description: 'Learn about Trimurya Corporation India, an AI services and software development company delivering automation, websites, SaaS, mobile apps, and AI data services.',
+    keywords: `about Trimurya Corporation, Trimurya Corporation India, Trimurya Corporation AI, ${DEFAULT_KEYWORDS}`
   },
   '/services': {
-    title: 'Services',
-    description: 'Explore enterprise AI, software, recruitment, digital marketing, telecom, call center, and media services from Trimurya Corporation.',
-    keywords: 'enterprise AI services, technology services, recruitment services, digital marketing, telecom services'
+    title: 'AI, Data, Website & Software Services',
+    description: 'Explore AI services, AI data collection, data annotation, model training support, automation, website development, SaaS, and mobile app development.',
+    keywords: DEFAULT_KEYWORDS
   },
   '/industries': {
     title: 'Industries',
-    description: 'Trimurya Corporation delivers tailored solutions for automotive, healthcare, retail, finance, defense, and more.',
-    keywords: 'industry solutions, automotive AI, healthcare AI, retail technology, fintech solutions'
+    description: 'Trimurya Corporation delivers AI solutions, software development, web applications, and automation services for healthcare, finance, retail, SaaS, and more.',
+    keywords: `industry AI solutions, automotive AI, healthcare AI, retail technology, fintech solutions, ${DEFAULT_KEYWORDS}`
   },
   '/projects': {
     title: 'Projects',
-    description: 'See how Trimurya Corporation has enabled transformation through technology, data, and digital growth initiatives.',
-    keywords: 'technology projects, AI implementation, digital transformation projects'
+    description: 'See Trimurya Corporation projects across AI automation, data services, software development, website design, web applications, SaaS, and mobile apps.',
+    keywords: `technology projects, AI implementation, digital transformation projects, ${DEFAULT_KEYWORDS}`
   },
   '/marketplace': {
-    title: 'Marketplace',
-    description: 'Browse Trimurya Corporation marketplace offerings for AI data, model tooling, training data, and enterprise solutions.',
-    keywords: 'AI marketplace, data marketplace, training data, model tooling'
+    title: 'AI Data Collection & Annotation Services',
+    description: 'Browse Trimurya Corporation AI data services for data collection, data annotation, training data, model training support, and AI automation.',
+    keywords: `AI marketplace, data marketplace, training data, model tooling, ${DEFAULT_KEYWORDS}`
   },
   '/careers': {
     title: 'Careers',
@@ -46,8 +86,8 @@ const ROUTE_METADATA = {
   },
   '/contact': {
     title: 'Contact Us',
-    description: 'Contact Trimurya Corporation to discuss AI, technology, recruitment, digital marketing, telecom, and media needs.',
-    keywords: 'contact Trimurya Corporation, business enquiry, AI consultation, recruitment enquiry'
+    description: 'Contact Trimurya Corporation for AI services, AI data collection, data annotation, model training support, website development, SaaS, and mobile apps.',
+    keywords: `contact Trimurya Corporation, business enquiry, AI consultation, website development enquiry, ${DEFAULT_KEYWORDS}`
   },
   '/login': {
     title: 'Login',
@@ -93,7 +133,7 @@ function buildFallbackMetadata(pathname) {
     return {
       title: `${serviceLabel} Services`,
       description: `Explore ${serviceLabel} services from Trimurya Corporation for modern business growth and digital transformation.`,
-      keywords: `${serviceLabel}, Trimurya Corporation, business solutions`
+      keywords: `${serviceLabel}, Trimurya Corporation, business solutions, ${DEFAULT_KEYWORDS}`
     };
   }
 
@@ -154,16 +194,45 @@ export function organizationSchema() {
     '@type': 'Organization',
     name: 'Trimurya Corporation',
     legalName: 'Trimurya Corporation',
+    alternateName: BRAND_ALIASES,
     slogan: 'Empowering Businesses Through Innovation, Technology & Talent',
     url: SITE_URL,
     logo: `${SITE_URL}/og-image.svg`,
     description: DEFAULT_DESCRIPTION,
-    sameAs: ['https://www.linkedin.com/', 'https://www.facebook.com/', 'https://www.instagram.com/'],
+    sameAs: SOCIAL_PROFILE_URLS,
     areaServed: ['India', 'Global'],
+    knowsAbout: CORE_SERVICE_KEYWORDS,
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Trimurya Corporation services',
+      itemListElement: [
+        'AI data collection',
+        'AI data annotation',
+        'AI model training support',
+        'AI automation services',
+        'website design',
+        'website development',
+        'custom web application development',
+        'software development',
+        'SaaS development',
+        'mobile app development'
+      ].map((serviceName) => ({
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: serviceName,
+          provider: {
+            '@type': 'Organization',
+            name: 'Trimurya Corporation',
+            url: SITE_URL
+          }
+        }
+      }))
+    },
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'customer service',
-      availableLanguage: 'English'
+      availableLanguage: ['English', 'Hindi']
     }
   };
 }
@@ -173,13 +242,19 @@ export function websiteSchema() {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Trimurya Corporation',
+    alternateName: BRAND_ALIASES,
     url: SITE_URL,
     description: DEFAULT_DESCRIPTION,
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: `${SITE_URL}/search?q={search_term_string}`,
-      'query-input': 'required name=search_term_string'
-    }
+    inLanguage: 'en-IN',
+    publisher: {
+      '@type': 'Organization',
+      name: 'Trimurya Corporation',
+      url: SITE_URL
+    },
+    about: CORE_SERVICE_KEYWORDS.map((keyword) => ({
+      '@type': 'Thing',
+      name: keyword
+    }))
   };
 }
 
@@ -273,20 +348,18 @@ export function faqSchema(items) {
   };
 }
 
-export function localBusinessSchema() {
-  return {
+export function localBusinessSchema(contact = {}) {
+  const schema = {
     '@context': 'https://schema.org',
-    '@type': 'LocalBusiness',
+    '@type': 'ProfessionalService',
     name: 'Trimurya Corporation',
     image: `${SITE_URL}/og-image.svg`,
     description: DEFAULT_DESCRIPTION,
     url: SITE_URL,
-    telephone: '+91-000-000-0000',
+    sameAs: SOCIAL_PROFILE_URLS,
+    areaServed: ['India', 'Global'],
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'India',
-      addressLocality: 'India',
-      postalCode: '000000',
       addressCountry: 'IN'
     },
     openingHoursSpecification: {
@@ -296,6 +369,12 @@ export function localBusinessSchema() {
       closes: '18:00'
     }
   };
+
+  if (contact.telephone) schema.telephone = contact.telephone;
+  if (contact.email) schema.email = contact.email;
+  if (contact.address) schema.address.streetAddress = contact.address;
+
+  return schema;
 }
 
 export function serviceSchema(service) {
@@ -304,6 +383,8 @@ export function serviceSchema(service) {
     '@type': 'Service',
     name: service.title,
     description: service.longDescription || service.summary || service.description || '',
+    serviceType: service.title,
+    keywords: service.seoKeywords || [service.title, service.label, ...CORE_SERVICE_KEYWORDS].filter(Boolean).join(', '),
     provider: {
       '@type': 'Organization',
       name: 'Trimurya Corporation',
@@ -354,7 +435,7 @@ export function setPageSeo(pathname = '/', overrides = {}) {
   upsertMetaTag({ name: 'twitter:card' }, 'summary_large_image');
   upsertMetaTag({ name: 'twitter:title' }, meta.ogTitle);
   upsertMetaTag({ name: 'twitter:description' }, meta.ogDescription);
-  upsertMetaTag({ name: 'twitter:image' }, `${SITE_URL}/og-image.svg`);
+  upsertMetaTag({ name: 'twitter:image' }, meta.image);
   upsertMetaTag({ property: 'og:title' }, meta.ogTitle);
   upsertMetaTag({ property: 'og:description' }, meta.ogDescription);
   upsertMetaTag({ property: 'og:type' }, 'website');

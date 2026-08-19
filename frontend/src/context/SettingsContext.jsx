@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { fetchSiteSettings } from '../services/settingsApi.js';
+import { DEFAULT_SOCIAL_LINKS } from '../utils/seo.js';
 
 const SettingsContext = createContext(null);
 
@@ -11,7 +12,7 @@ export function SettingsProvider({ children }) {
     contactEmail: '',
     contactPhone: '',
     address: '',
-    social: {},
+    social: DEFAULT_SOCIAL_LINKS,
     seo: { title: 'Trimurya Corporation', description: '', keywords: '' },
     loading: true 
   });

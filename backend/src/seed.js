@@ -16,20 +16,19 @@ const seedAdmin = async () => {
   }
 
   try {
-    const existing = await User.findOne({ email: AppConfig.admin.email });
-    if (!existing) {
-      const hashedPassword = await bcrypt.hash(AppConfig.admin.password, 12);
-      await User.create({
+    const hashedPassword = await bcrypt.hash(AppConfig.admin.password, 12);
+    await User.findOneAndUpdate(
+      { email: AppConfig.admin.email },
+      {
         name: AppConfig.admin.name || 'Admin',
         email: AppConfig.admin.email,
         password: hashedPassword,
         role: 'admin',
         verified: true
-      });
-      console.log('Admin user seeded:', AppConfig.admin.email);
-    } else {
-      console.log('Admin user already exists:', AppConfig.admin.email);
-    }
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
+    console.log('Admin user ready:', AppConfig.admin.email);
   } catch (error) {
     console.log('Admin seeding skipped:', error.message);
   }

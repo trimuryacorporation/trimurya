@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import SectionHeader from '../components/SectionHeader.jsx';
 import ServiceCard from '../components/ServiceCard.jsx';
 import SeoHead from '../components/SeoHead.jsx';
-import { breadcrumbSchema, itemListSchema } from '../utils/seo.js';
+import { DEFAULT_KEYWORDS, breadcrumbSchema, itemListSchema } from '../utils/seo.js';
 import { SERVICE_PAGES } from '../data/services.js';
 
 export default function Services() {
@@ -18,9 +18,9 @@ export default function Services() {
     <>
       <SeoHead
         pathname="/services"
-        title="Services"
-        description="Explore enterprise AI, software, recruitment, digital marketing, telecom, call center, and media services from Trimurya Corporation."
-        keywords="enterprise AI services, technology services, recruitment services, digital marketing, telecom services"
+        title="AI, Data, Website & Software Services"
+        description="Explore AI services, AI data collection, data annotation, model training support, automation, website development, SaaS, and mobile app development."
+        keywords={DEFAULT_KEYWORDS}
         schemas={[
           breadcrumbSchema([
             { name: 'Home', url: 'https://www.trimuryacorporation.in/' },

@@ -1,12 +1,12 @@
 import { useState, useMemo, useEffect } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { FiSearch, FiX } from 'react-icons/fi';
 import SectionHeader from '../components/SectionHeader.jsx';
 import StatsBar from '../components/StatsBar.jsx';
 import FilterBar from '../components/FilterBar.jsx';
 import ProjectCard from '../components/ProjectCard.jsx';
+import SeoHead from '../components/SeoHead.jsx';
 import { fetchPublished } from '../services/contentApi.js';
-import { itemListSchema, breadcrumbSchema } from '../utils/seo.js';
+import { DEFAULT_KEYWORDS, itemListSchema, breadcrumbSchema } from '../utils/seo.js';
 import { FALLBACK_PROJECTS, normalizeProject } from '../data/projectContent.js';
 
 export default function Projects() {
@@ -81,17 +81,17 @@ export default function Projects() {
 
   return (
     <>
-      <Helmet>
-        <title>Projects | Trimurya Corporation</title>
-        <meta name="description" content="See how Trimurya Corporation has enabled transformation through technology, data, and digital growth initiatives." />
-        <meta name="keywords" content="technology projects, AI implementation, digital transformation projects" />
-        <link rel="canonical" href="https://www.trimuryacorporation.in/projects" />
-        <script type="application/ld+json">{JSON.stringify(breadcrumbSchema([
+      <SeoHead
+        pathname="/projects"
+        title="Projects"
+        description="See Trimurya Corporation projects across AI automation, data services, software development, website design, web applications, SaaS, and mobile apps."
+        keywords={`technology projects, AI implementation, digital transformation projects, ${DEFAULT_KEYWORDS}`}
+        schemas={projectListSchema ? [projectListSchema] : []}
+        breadcrumbs={[
           { name: 'Home', url: 'https://www.trimuryacorporation.in/' },
           { name: 'Projects', url: 'https://www.trimuryacorporation.in/projects' }
-        ]))}</script>
-        {projectListSchema && <script type="application/ld+json">{JSON.stringify(projectListSchema)}</script>}
-      </Helmet>
+        ]}
+      />
       <section className="mx-auto max-w-7xl px-4 py-20 lg:px-8">
         <SectionHeader
           eyebrow="Portfolio"

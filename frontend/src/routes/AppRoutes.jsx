@@ -34,6 +34,7 @@ import Auth from '../pages/Auth.jsx';
 import Dashboard from '../pages/Dashboard.jsx';
 import NotFound from '../pages/NotFound.jsx';
 import PrivacyPolicy from '../pages/PrivacyPolicy.jsx';
+import ServiceRoute from '../components/ServiceRoute.jsx';
 import AdminLayout from '../admin/layout/AdminLayout.jsx';
 import AdminLogin from '../admin/pages/AdminLogin.jsx';
 import AdminDashboard from '../admin/pages/AdminDashboard.jsx';
@@ -50,6 +51,7 @@ export default function AppRoutes() {
         <Route index element={<Home />} />
         <Route path="about" element={<MongoPageRoute slug="about" fallback={<About />} />} />
         <Route path="services" element={<Services />} />
+        <Route path="services/:slug" element={<ServiceRoute />} />
         <Route path="services/ai-project-management" element={<AiProjectManagement />} />
         <Route path="services/website-development" element={<WebsiteDevelopment />} />
         <Route path="services/digital-marketing" element={<DigitalMarketing />} />

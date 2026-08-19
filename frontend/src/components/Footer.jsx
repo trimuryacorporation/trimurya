@@ -15,6 +15,7 @@ import { FaFacebookF, FaInstagram, FaLinkedinIn, FaXTwitter, FaYoutube, FaWhatsa
 import TextLogo from './TextLogo.jsx';
 import Button from './Button.jsx';
 import { useSettings } from '../context/SettingsContext.jsx';
+import { DEFAULT_SOCIAL_LINKS } from '../utils/seo.js';
 
 const footerColumns = [
   {
@@ -55,11 +56,11 @@ const footerColumns = [
 ];
 
 const defaultSocialLinks = [
-  { label: 'LinkedIn', icon: FaLinkedinIn, href: '#', key: 'linkedin' },
+  { label: 'LinkedIn', icon: FaLinkedinIn, href: DEFAULT_SOCIAL_LINKS.linkedin, key: 'linkedin' },
   { label: 'Twitter', icon: FaXTwitter, href: '#', key: 'twitter' },
   { label: 'Facebook', icon: FaFacebookF, href: '#', key: 'facebook' },
   { label: 'YouTube', icon: FaYoutube, href: '#', key: 'youtube' },
-  { label: 'Instagram', icon: FaInstagram, href: '#', key: 'instagram' },
+  { label: 'Instagram', icon: FaInstagram, href: DEFAULT_SOCIAL_LINKS.instagram, key: 'instagram' },
   { label: 'WhatsApp', icon: FaWhatsapp, href: 'https://wa.me/910000000000', key: 'whatsapp' },
   { label: 'GitHub', icon: FaGithub, href: '#', key: 'github' }
 ];

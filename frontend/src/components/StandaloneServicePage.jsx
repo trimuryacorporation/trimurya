@@ -99,6 +99,7 @@ export default function StandaloneServicePage({ service, heroImage }) {
   const pageList = getServicePageList().filter((item) => item.slug !== service.slug);
   const canonicalPath = `/services/${service.slug}`;
   const description = service.seoDescription || service.summary || service.intro;
+  const keywords = service.seoKeywords || [service.title, service.label, service.summary, 'Trimurya Corporation'].filter(Boolean).join(', ');
   const breadcrumbs = [
     { name: 'Home', url: 'https://www.trimuryacorporation.in/' },
     { name: 'Services', url: 'https://www.trimuryacorporation.in/services' },
@@ -111,7 +112,7 @@ export default function StandaloneServicePage({ service, heroImage }) {
         pathname={canonicalPath}
         title={service.title}
         description={description}
-        keywords={[service.title, service.label, service.summary, 'Trimurya Corporation'].filter(Boolean).join(', ')}
+        keywords={keywords}
         image={heroImage}
         schemas={[serviceSchema(service)]}
         breadcrumbs={breadcrumbs}

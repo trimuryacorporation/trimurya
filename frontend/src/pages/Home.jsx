@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Helmet } from 'react-helmet-async';
 import CounterCard from '../components/CounterCard.jsx';
 import HeroSlider from '../components/HeroSlider.jsx';
 import SectionHeader from '../components/SectionHeader.jsx';
@@ -8,7 +7,9 @@ import Button from '../components/Button.jsx';
 import heroIllustration from '../assets/ai-hero.png';
 import { fetchPublished } from '../services/contentApi.js';
 import { resolveIcon } from '../utils/iconResolver.js';
-import { breadcrumbSchema, itemListSchema } from '../utils/seo.js';
+import SeoHead from '../components/SeoHead.jsx';
+import { breadcrumbSchema, organizationSchema, websiteSchema, DEFAULT_KEYWORDS } from '../utils/seo.js';
+import { SERVICE_PAGES } from '../data/services.js';
 
 const processSteps = [
   {
@@ -31,33 +32,32 @@ const processSteps = [
 export default function Home() {
   const [stats, setStats] = useState([]);
   const [values, setValues] = useState([]);
-  const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const featuredServices = SERVICE_PAGES.slice(0, 4);
 
   useEffect(() => {
     Promise.all([
       fetchPublished('stats'),
-      fetchPublished('values'),
-      fetchPublished('projects')
-    ]).then(([statsData, valuesData, projectsData]) => {
+      fetchPublished('values')
+    ]).then(([statsData, valuesData]) => {
       setStats(statsData);
       setValues(valuesData);
-      setProjects(projectsData);
       setLoading(false);
     }).catch(() => setLoading(false));
   }, []);
 
   return (
     <>
-      <Helmet>
-        <title>AI, Technology & Talent Solutions | Trimurya Corporation</title>
-        <meta name="description" content="Trimurya Corporation helps businesses scale with AI, technology, recruitment, HR, digital marketing, telecom, call center, and media services." />
-        <meta name="keywords" content="Trimurya Corporation, AI services, technology solutions, recruitment, HR services, digital marketing, telecom, call center, media services" />
-        <link rel="canonical" href="https://www.trimuryacorporation.in/" />
-        <script type="application/ld+json">{JSON.stringify(breadcrumbSchema([
+      <SeoHead
+        pathname="/"
+        title="AI Services & Software Development Company India"
+        description="Trimurya Corporation India delivers AI data collection, data annotation, AI automation, model training support, software, SaaS, website and mobile app development."
+        keywords={DEFAULT_KEYWORDS}
+        schemas={[websiteSchema(), organizationSchema()]}
+        breadcrumbs={[
           { name: 'Home', url: 'https://www.trimuryacorporation.in/' }
-        ]))}</script>
-      </Helmet>
+        ]}
+      />
 
       <HeroSlider />
 
@@ -74,16 +74,20 @@ export default function Home() {
       <section className="mx-auto max-w-7xl px-4 py-20 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
           <div>
-            <SectionHeader eyebrow="Enterprise Delivery" title="Professional support for AI programs and websites" copy="We build digital experiences and delivery systems that help growing teams move faster with confidence." />
+            <SectionHeader eyebrow="Enterprise Delivery" title="Professional support for AI services and software delivery" copy="Trimurya Corporation India supports AI data collection, data annotation, AI automation, software development, SaaS, websites, and mobile apps for growing teams." />
             <div className="grid gap-5 sm:grid-cols-2">
-              <div className="rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                <h3 className="text-lg font-black text-primary dark:text-white">AI Program Enablement</h3>
-                <p className="mt-4 text-sm leading-7 text-slate-600 dark:text-slate-300">Keep your AI initiatives aligned with business goals, delivery rhythm, and stakeholder visibility.</p>
-              </div>
-              <div className="rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                <h3 className="text-lg font-black text-primary dark:text-white">Website Transformation</h3>
-                <p className="mt-4 text-sm leading-7 text-slate-600 dark:text-slate-300">Launch sleek, fast, and conversion-focused websites designed for enterprise credibility and growth.</p>
-              </div>
+              {featuredServices.slice(0, 2).map((service) => {
+                const Icon = resolveIcon(service.icon);
+                return (
+                  <div key={service.slug} className="rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary/10 text-secondary">
+                      <Icon size={24} />
+                    </div>
+                    <h3 className="mt-5 text-lg font-black text-primary dark:text-white">{service.title}</h3>
+                    <p className="mt-4 text-sm leading-7 text-slate-600 dark:text-slate-300">{service.summary}</p>
+                  </div>
+                );
+              })}
             </div>
             <div className="mt-10 flex flex-wrap gap-4">
               <Button
@@ -145,7 +149,14 @@ export default function Home() {
         </div>
       </section>
 
-     
+      <section className="mx-auto max-w-7xl px-4 py-20 lg:px-8">
+        <SectionHeader eyebrow="Featured Services" title="A dynamic service stack designed for growth" copy="These are pulled from the same service registry that powers the service pages, so the homepage stays aligned automatically." />
+        <div className="mt-12 grid gap-6 lg:grid-cols-2">
+          {featuredServices.map((service, index) => (
+            <ServiceCard key={service.slug} service={service} index={index} />
+          ))}
+        </div>
+      </section>
 
       <section className="mx-auto max-w-7xl px-4 pb-20 lg:px-8">
         <div className="relative rounded-[32px] overflow-hidden shadow-[0_30px_100px_rgba(6,29,92,0.35)] sm:px-12 lg:px-16">
