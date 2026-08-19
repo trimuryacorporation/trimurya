@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FiSettings, FiSave, FiGlobe, FiMail, FiShield, FiRefreshCw } from 'react-icons/fi';
-import api from '../../services/api.js';
-import { fetchSettings, persistSettings } from '../../services/settingsApi.js';
+import { fetchSiteSettings, persistSettings } from '../../services/settingsApi.js';
+import { DEFAULT_SOCIAL_LINKS } from '../../utils/seo.js';
 
 const defaultState = {
   siteName: 'Trimurya Corporation',
@@ -11,10 +11,7 @@ const defaultState = {
   contactEmail: '',
   contactPhone: '',
   address: '',
-  linkedin: '',
-  twitter: '',
-  facebook: '',
-  instagram: ''
+  social: { ...DEFAULT_SOCIAL_LINKS, twitter: '', facebook: '' }
 };
 
 export default function AdminSettings() {
@@ -36,18 +33,16 @@ export default function AdminSettings() {
   useEffect(() => {
     let mounted = true;
     setLoading(true);
-    fetchSettings('site').then((data) => {
+    fetchSiteSettings().then((data) => {
       if (!mounted) return;
-      setState((s) => ({
+      setState({
         ...defaultState,
         ...data,
         social: {
-          linkedin: data.linkedin || '',
-          twitter: data.twitter || '',
-          facebook: data.facebook || '',
-          instagram: data.instagram || ''
+          ...defaultState.social,
+          ...(data.social || {})
         }
-      }));
+      });
       setLoading(false);
     }).catch(() => {
       if (mounted) setLoading(false);
