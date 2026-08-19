@@ -1,6 +1,9 @@
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
 
-dotenv.config({ override: true });
+const __dirname = dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: join(__dirname, '..', '..', '.env'), override: true });
 
 const ENV = process.env.NODE_ENV || 'development';
 
@@ -38,7 +41,8 @@ export const AppConfig = {
   admin: {
     name: process.env.ADMIN_NAME,
     email: process.env.ADMIN_EMAIL,
-    password: process.env.ADMIN_PASSWORD
+    password: process.env.ADMIN_PASSWORD,
+    registrationKey: process.env.ADMIN_REGISTRATION_KEY
   },
   content: {
     defaultStatus: process.env.CONTENT_DEFAULT_STATUS || 'published',
